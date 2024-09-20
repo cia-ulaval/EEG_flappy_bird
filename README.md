@@ -9,10 +9,10 @@ Petit jeu de flappy bird from scratch pour utiliser avec l'EEG
     4. 
 ---
 
-# Comment débuter ?
+# Comment débuter ? <a name="comment_debuter"></a>
 
-## 1. Installer Python
+## 1. Installer Python <a name="installer_python"></a>
 
-## 2. Installer Git
+## 2. Installer Git <a name="installer_git"></a>
 
-## 3. Cloner le repo
+## 3. Cloner le repo <a name="cloner_repo"></a>
