@@ -47,7 +47,13 @@ Puis, vous aller pouvoir ouvrir le "folder" EEG_flappy_bird pour voir/intéragir
 
 ## Tester le projet
 
-Le projet est bien rudimentaire pour l'instant, mais vous pouvez le tester en lançant ```python main.py``` dans le terminal! Il devrait y avoir une fenêtre simpliste qui apparait!
+Avant d'aller plus loin, il faut créer l'environnement dans lequel faire fonctionner le projet! Nous allons créer un environnement virtuel pour compartimentaliser notre projet (le rendre indépendant). Pour en savoir plus : https://docs.python.org/3/library/venv.html
+
+1. Lancez la commande :  ```python -m venv venv``` dans le terminal
+2. Activez l'environnement virtuel avec : ```venv/Scripts/activate``` pour *Windows* ou ```source venv/bin/activate``` pour *Linux/MacOS* 
+3. Téléchargez toutes les dépendances requises (les libraries) avec la commande ```pip install -r requirements.txt```
+
+Maintenant la partie fun! Le projet est bien rudimentaire pour l'instant, mais vous pouvez le tester en lançant ```python main.py``` dans le terminal! Il devrait y avoir une fenêtre simpliste qui apparait!
 
 # D'autres questions?
 Allez voir sur le Discord pour les heures d'ouverture du local pour aller travailler sur le projet/demander de l'aide!
