@@ -8,11 +8,14 @@ Petit jeu de flappy bird from scratch pour utiliser avec l'EEG
     3. [Cloner le repo] (#cloner_repo)
     4. 
 ---
+<a name="comment_debuter"/>
+# Comment débuter ?
 
-# Comment débuter ? <a name="comment_debuter"></a>
+<a name="installer_python"/>
+## Installer Python
 
-## 1. Installer Python <a name="installer_python"></a>
+<a name="installer_git"/>
+## Installer Git 
 
-## 2. Installer Git <a name="installer_git"></a>
-
-## 3. Cloner le repo <a name="cloner_repo"></a>
+<a name="cloner_repo"/>
+## Cloner le repo 
