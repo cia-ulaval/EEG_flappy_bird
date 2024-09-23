@@ -13,6 +13,7 @@ class GameManager:
     
     def setup_pygame(self):
         pygame.init()
+        pygame.display.set_caption(GameConfig.WINDOW_NAME)
         self.screen = pygame.display.set_mode(GameConfig.SCREEN_DIMENSION)
         self.clock = pygame.time.Clock()
         self.running = True
