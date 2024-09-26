@@ -2,14 +2,14 @@ import pygame
 import pygame.gfxdraw
 import math
 from src.GameConfig import GameConfig
+from src.Game import Game
 class GameManager:
-    
     def __init__(self):
-        self.init_variables()
         self.setup_pygame()
+        self.init_variables()
     
     def init_variables(self):
-        pass
+        self.game = Game(screen=self.screen)
     
     def setup_pygame(self):
         pygame.init()
@@ -39,14 +39,8 @@ class GameManager:
             ###
             # The game render take place here
             ###
-            t = pygame.time.get_ticks()
-            longueur_onde = 500
-            color = (255, 0, 255)
-            x = self.screen.get_width()/2 + math.sin(t/longueur_onde) * 100
-            y = self.screen.get_height()/2 + math.cos(t/longueur_onde) * 100
-            position = pygame.Vector2(x,y)
-            pygame.gfxdraw.aacircle(self.screen, int(x),int(y), 30,color)
-            pygame.gfxdraw.filled_circle(self.screen, int(x),int(y), 30, color)
+            self.game.update()
+            self.game.draw(self.screen)
             
             # flip() to make the drawing appear on screen
             pygame.display.flip()
