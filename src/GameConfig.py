@@ -7,8 +7,3 @@ class GameConfig:
     REFRESH_RATE = 60
     SCROLL_SPEED = 6
     GROUND_SPACE = 50
-    SRC_DIR = "src"
-    RESSOURCES_DIR = "ressources"
-    IMAGES_DIR = "images"
-    SOUNDS_DIR = "sounds"
-    

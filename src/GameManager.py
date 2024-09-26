@@ -1,6 +1,5 @@
 import pygame
 import pygame.gfxdraw
-from src.Game import Game
 from pygame import Vector2
 
 from src.Bird import Bird
@@ -10,7 +9,6 @@ from src.GameConfig import GameConfig
 class GameManager:
 
     def __init__(self):
-        self.game = Game(screen=self.screen)
         self.dt = 0
         self.running = True
         self.clock = pygame.time.Clock()
@@ -21,8 +19,9 @@ class GameManager:
         self.ground_img = pygame.image.load('assets/ground.png')
         self.bird = Bird()
         self.setup_pygame()
-    
-    def setup_pygame(self):
+
+    @staticmethod
+    def setup_pygame():
         pygame.init()
         pygame.display.set_caption(GameConfig.WINDOW_NAME)
 
@@ -59,14 +58,6 @@ class GameManager:
             if abs(self.scroll) > 35:
                 self.scroll = 0
 
-            self.screen.fill("green")
-            
-            ###
-            # The game render take place here
-            ###
-            self.game.update()
-            self.game.draw(self.screen)
-            
             # flip() to make the drawing appear on screen
             pygame.display.flip()
 
