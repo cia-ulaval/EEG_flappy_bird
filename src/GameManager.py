@@ -4,26 +4,31 @@ from pygame import Vector2
 
 from src.Bird import Bird
 from src.GameConfig import GameConfig
+from src.Game import Game
+from src.InputManager import InputManager
 
 
 class GameManager:
 
     def __init__(self):
+        self.setup_pygame()
+        self.init_variables()
+
+
+    def init_variables(self):
         self.dt = 0
         self.running = True
-        self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode(Vector2(GameConfig.SCREEN_DIMENSION.x, GameConfig.SCREEN_DIMENSION.y +GameConfig.GROUND_SPACE))
         self.scroll = 0
         self.scroll_speed = GameConfig.SCROLL_SPEED
         self.bg_img = pygame.transform.scale(pygame.image.load('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.ground_img = pygame.image.load('assets/ground.png')
-        self.bird = Bird()
-        self.setup_pygame()
+        self.game = Game(screen=self.screen)
 
-    @staticmethod
-    def setup_pygame():
+    def setup_pygame(self):
         pygame.init()
         pygame.display.set_caption(GameConfig.WINDOW_NAME)
+        self.clock = pygame.time.Clock()
+        self.screen = pygame.display.set_mode(Vector2(GameConfig.SCREEN_DIMENSION.x, GameConfig.SCREEN_DIMENSION.y +GameConfig.GROUND_SPACE))
 
     def start_application(self):
         print('Application Flappy_EEG starting...')
@@ -33,30 +38,21 @@ class GameManager:
         # Main game loop
         while self.running:
 
+            # Refresh all inputs of the last frame
+            InputManager.refresh_inputs()
+
             # poll for events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-
+                else:
+                    InputManager.handle_event(event)
+                
             # clear the screen buffer with a color
             self.screen.blit(self.bg_img, (0, 0))
-
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_SPACE]:
-                self.bird.jump(self.dt)
-
-            if self.bird.position.y <= 0:
-                self.bird.position.y = 0
-
-            self.bird.position.y += self.dt * 100
-
-            self.bird.draw(self.screen)
-
-            self.screen.blit(self.ground_img, (self.scroll, GameConfig.SCREEN_DIMENSION.y))
-
-            self.scroll += self.scroll_speed
-            if abs(self.scroll) > 35:
-                self.scroll = 0
+            
+            self.game.update(self.dt)
+            self.game.draw(self.screen)
 
             # flip() to make the drawing appear on screen
             pygame.display.flip()
