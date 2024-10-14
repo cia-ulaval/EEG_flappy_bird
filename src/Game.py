@@ -38,7 +38,7 @@ class Game:
 
         # scroll the background
         self.scroll += self.scroll_speed
-        if abs(self.scroll) > 35:
+        if abs(self.scroll) > 450:
             self.scroll = 0
   
         # update it's sub-objects
