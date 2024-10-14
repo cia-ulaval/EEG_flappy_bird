@@ -66,3 +66,9 @@ class Bird(pygame.sprite.Sprite):
         gravity_force = 800
         self.velocity.y += gravity_force * dt
 
+    def crashed(self):
+        crashed = False
+        if self.const_rect.centery == GameConfig.SCREEN_DIMENSION.y - 20:
+            crashed = True
+        return crashed
+

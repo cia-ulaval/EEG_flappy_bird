@@ -36,6 +36,12 @@ class Game:
         if InputManager.is_jump_down():
             self.bird.jump(dt)
 
+        # stop scrolling if bird is crashed
+        if self.bird.crashed():
+            self.scroll_speed = 0
+        else:
+            self.scroll_speed = GameConfig.SCROLL_SPEED
+
         # scroll the background
         self.scroll += self.scroll_speed
         if abs(self.scroll) > 450:
