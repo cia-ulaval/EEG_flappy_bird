@@ -25,6 +25,8 @@ class GameManager:
         self.game = Game(screen=self.screen)
 
     def setup_pygame(self):
+        self.icon_img = pygame.image.load('assets/ico.png')
+        pygame.display.set_icon(self.icon_img)
         pygame.init()
         pygame.display.set_caption(GameConfig.WINDOW_NAME)
         self.clock = pygame.time.Clock()

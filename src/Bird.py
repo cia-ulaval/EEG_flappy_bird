@@ -33,8 +33,8 @@ class Bird(pygame.sprite.Sprite):
         self.const_rect.center += self.velocity * dt
 
         # limit the character to the screen limit
-        if self.const_rect.centery > GameConfig.SCREEN_DIMENSION.y:
-            self.const_rect.centery = GameConfig.SCREEN_DIMENSION.y
+        if self.const_rect.centery > GameConfig.SCREEN_DIMENSION.y - 20:
+            self.const_rect.centery = GameConfig.SCREEN_DIMENSION.y - 20
             self.velocity.y = 0
 
         # change back to default sprite if finished jump
