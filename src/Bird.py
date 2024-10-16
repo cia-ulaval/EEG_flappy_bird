@@ -43,7 +43,7 @@ class Bird(pygame.sprite.Sprite):
         next_image = self.const_flap_image
         if pygame.time.get_ticks() > self.jump_timer:
             next_image = self.const_mid_flap_image
-        if pygame.time.get_ticks() > self.jump_timer + 30:
+        if pygame.time.get_ticks() > self.jump_timer + 50:
             next_image = self.const_image
 
 
@@ -60,7 +60,7 @@ class Bird(pygame.sprite.Sprite):
 
     def jump(self, dt):
         # changing frame for flap
-        self.jump_timer = pygame.time.get_ticks() + 75
+        self.jump_timer = pygame.time.get_ticks() + 95
         
         # velocity change for jump
         self.velocity.y = -self.JUMP_FORCE
