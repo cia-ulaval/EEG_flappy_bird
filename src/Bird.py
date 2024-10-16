@@ -9,6 +9,7 @@ class Bird(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.init_variables(screen)
         self.velocity = pygame.Vector2(0, 0)
+        self.jump_force = 800
     
     def init_variables(self, screen:pygame.Surface):
         self.const_image, self.const_rect = load_image("assets/brainDefault.png", -1)
@@ -44,6 +45,19 @@ class Bird(pygame.sprite.Sprite):
             self.image = self.const_image
 
         # rotation update, if not crashed on the ground
+
+          # conflit of the scoreboard
+#         if self.const_rect.centery < GameConfig.SCREEN_DIMENSION.y:
+#             angle = max(-(self.velocity.y / self.jump_force * 60) - 45, -180)
+#         else:
+#             angle = 0
+
+#         self.image, self.rect = self.rotate_around_center(
+#             self.const_image,
+#             angle,
+#             self.const_rect.centerx,
+#             self.const_rect.centery)
+
         # if self.const_rect.centery < GameConfig.SCREEN_DIMENSION.y:
         #     speed = 0.1
         #     angle = pygame.time.get_ticks() * speed
@@ -63,7 +77,7 @@ class Bird(pygame.sprite.Sprite):
         self.velocity.y = -jump_force
 
     def gravity(self, dt):
-        gravity_force = 800
+        gravity_force = 3000
         self.velocity.y += gravity_force * dt
 
     def crashed(self):

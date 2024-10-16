@@ -1,5 +1,5 @@
 from pygame import Vector2
-
+from src.LEVELS import Levels
 
 class GameConfig:
     SCREEN_DIMENSION = Vector2(800, 600)
@@ -7,3 +7,6 @@ class GameConfig:
     REFRESH_RATE = 60
     SCROLL_SPEED = -6
     GROUND_SPACE = 50
+    DEFAULT_LEVEL = Levels.SCOREBOARD
+    FONT = 'assets/policeFlappy.ttf'
+
