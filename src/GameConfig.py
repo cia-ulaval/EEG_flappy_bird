@@ -8,5 +8,6 @@ class GameConfig:
     SCROLL_SPEED = -6
     GROUND_SPACE = 50
     DEFAULT_LEVEL = Levels.SCOREBOARD
+    GRAVITY_FORCE = 3000
     FONT = 'assets/policeFlappy.ttf'
 

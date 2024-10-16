@@ -16,7 +16,6 @@ class GameManager:
         self.setup_pygame()
         self.init_variables()
 
-
     def init_variables(self):
         self.dt = 0
         self.running = True
@@ -109,6 +108,5 @@ class GameManager:
 
             # clock to limit loop to the refresh rate
             self.dt = self.clock.tick(GameConfig.REFRESH_RATE) / 1000
-
 
         pygame.quit()

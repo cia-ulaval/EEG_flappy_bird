@@ -9,7 +9,8 @@ class Bird(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.init_variables(screen)
         self.velocity = pygame.Vector2(0, 0)
-        self.jump_force = 800
+        self.JUMP_FORCE = 800
+        self.SPEED_BIRD_TILT = 40
     
     def init_variables(self, screen:pygame.Surface):
         self.const_image, self.const_rect = load_image("assets/brainDefault.png", -1)
@@ -39,46 +40,34 @@ class Bird(pygame.sprite.Sprite):
             self.velocity.y = 0
 
         # change back to default sprite if finished jump
+        next_image = self.const_mid_flap_image
         if pygame.time.get_ticks() > self.jump_timer:
-            self.image = self.const_mid_flap_image
+            next_image = self.const_mid_flap_image
         if pygame.time.get_ticks() > self.jump_timer + 30:
-            self.image = self.const_image
+            next_image = self.const_image
 
-        # rotation update, if not crashed on the ground
 
-          # conflit of the scoreboard
-#         if self.const_rect.centery < GameConfig.SCREEN_DIMENSION.y:
-#             angle = max(-(self.velocity.y / self.jump_force * 60) - 45, -180)
-#         else:
-#             angle = 0
-
-#         self.image, self.rect = self.rotate_around_center(
-#             self.const_image,
-#             angle,
-#             self.const_rect.centerx,
-#             self.const_rect.centery)
-
-        # if self.const_rect.centery < GameConfig.SCREEN_DIMENSION.y:
-        #     speed = 0.1
-        #     angle = pygame.time.get_ticks() * speed
-        #     self.image, self.rect = self.rotate_around_center(
-        #         self.const_image,
-        #         angle,
-        #         self.const_rect.centerx,
-        #         self.const_rect.centery 
-        #     )
+        # rotates the bird according to the velocity
+        if self.const_rect.centery < GameConfig.SCREEN_DIMENSION.y:
+            angle = max(-(self.velocity.y/ self.JUMP_FORCE * self.SPEED_BIRD_TILT) + 45, -180)
+        else:
+            angle = 0
+        self.image, self.rect = self.rotate_around_center(
+            next_image,
+            angle,
+            self.const_rect.centerx,
+            self.const_rect.centery)
 
     def jump(self, dt):
-        #changing frame for flap
+        # changing frame for flap
         self.image = self.const_flap_image
         self.jump_timer = pygame.time.get_ticks() + 75
-
-        jump_force = 300
-        self.velocity.y = -jump_force
+        
+        # velocity change for jump
+        self.velocity.y = -self.JUMP_FORCE
 
     def gravity(self, dt):
-        gravity_force = 3000
-        self.velocity.y += gravity_force * dt
+        self.velocity.y += GameConfig.GRAVITY_FORCE * dt
 
     def crashed(self):
         crashed = False

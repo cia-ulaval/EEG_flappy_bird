@@ -54,7 +54,7 @@ class Scoreboard:
 
 
         # mettre le label de l'écriture scoreboard
-        self.menu.add.label(title="Scoreboard\n\n", font_size=self.SCOREBOARD_FONT_SIZE, font_color=self.BLACK
+        self.menu.add.label(title="Scoreboard\n\n", font_size=self.SCOREBOARD_FONT_TILE_SIZE, font_color=self.BLACK
                                     , font_name=pygame_menu.font.FONT_8BIT)
 
 
@@ -65,8 +65,8 @@ class Scoreboard:
         # ajouter chaque game dans le leaderboard en les sortant selon leur score
         for index, item in enumerate(sorted(list(self.data.values()), key=lambda x: x["score"], reverse=True)):
             self.menu.add.label(title=f"{index+1:<{indentIndex}}"
-                                      f"{item["nom"][:15]:^{indentNom}}"
-                                      f"{item["score"]:>4}\n",
+                                      f"{item['nom'][:15]:^{indentNom}}"
+                                      f"{item['score']:>4}\n",
                     font_color=[self.GOLD, self.SILVER, self.BRONZE, self.BLACK][min(index, 3)],
                     font_name=GameConfig.FONT,
                                         font_size=self.SCOREBOARD_FONT_P_SIZE)
