@@ -49,8 +49,19 @@ class Game:
         # jump if space is down
         if InputManager.is_jump_down():
             self.bird.jump(dt)
+        # update 
+        #self.update_bg()
 
-        self.update_bg()
+        # stop scrolling if bird is crashed
+        if self.bird.crashed():
+            self.scroll_speed = 0
+        else:
+            self.scroll_speed = GameConfig.SCROLL_SPEED
+
+        # scroll the background
+        self.scroll += self.scroll_speed
+        if abs(self.scroll) > 450:
+            self.scroll = 0
   
         # update it's sub-objects
         self.group.update(dt)
