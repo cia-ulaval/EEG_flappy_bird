@@ -12,15 +12,21 @@ from src.LEVELS import Levels
 class Scoreboard:
 
 
-    #créer le constructeur
+    # créer le constructeur
     def __init__(self, screen:pygame.Surface):
         self.data = json.load(open("data/scores.json"))
-
-
         self.init_variables()
 
-    #initialiser les variables
+    # initialiser les variables
     def init_variables(self):
+
+        self.GOLD = (180, 180, 3)
+        self.SILVER = (111, 111, 111)
+        self.BRONZE = (147, 105, 50)
+        self.WHITE = (255, 255, 255)
+        self.BLACK = (0, 0, 0)
+        self.SCOREBOARD_FONT_TILE_SIZE = 40
+        self.SCOREBOARD_FONT_P_SIZE = 20
 
         # créer le thème
         theme = pm.themes.THEME_SOLARIZED.copy()
@@ -39,7 +45,7 @@ class Scoreboard:
                                          resize=(GameConfig.SCREEN_DIMENSION[0]-200,GameConfig.SCREEN_DIMENSION[1]-50))
 
 
-        #créer le menu
+        # créer le menu
         self.menu = pm.Menu(width=GameConfig.SCREEN_DIMENSION[0]-200,
                        height=GameConfig.SCREEN_DIMENSION[1]-100,
                        theme=theme,
@@ -47,26 +53,26 @@ class Scoreboard:
         self.menu.set_relative_position(50, 55)
 
 
-        #mettre le label de l'écriture scoreboard
-        self.menu.add.label(title="Scoreboard\n\n", font_size=40, font_color=(255, 255, 255)
+        # mettre le label de l'écriture scoreboard
+        self.menu.add.label(title="Scoreboard\n\n", font_size=self.SCOREBOARD_FONT_SIZE, font_color=self.BLACK
                                     , font_name=pygame_menu.font.FONT_8BIT)
 
 
-        #mettre les indentations pour que chaque
+        # mettre les indentations pour que chaque score soit aligne (i.e deplacer le score selon la puissance 10 de celui-ci)
         indentIndex = int(log10(len(self.data.values()))) + 1
         indentNom = max(list(map(lambda e: len(e["nom"][:18]), list(self.data.values())))) + 1
 
-        #ajouter chaque élément
+        # ajouter chaque game dans le leaderboard en les sortant selon leur score
         for index, item in enumerate(sorted(list(self.data.values()), key=lambda x: x["score"], reverse=True)):
             self.menu.add.label(title=f"{index+1:<{indentIndex}}"
                                       f"{item["nom"][:15]:^{indentNom}}"
                                       f"{item["score"]:>4}\n",
-                    font_color=[(183, 183, 3 ), (111, 111, 111), (147, 105, 50),(0, 0, 0)][min(index, 3)],
-                    font_name='assets/policeFlappy.ttf',
-                                        font_size=20)
+                    font_color=[self.GOLD, self.SILVER, self.BRONZE, self.BLACK][min(index, 3)],
+                    font_name=GameConfig.FONT,
+                                        font_size=self.SCOREBOARD_FONT_P_SIZE)
 
 
-    #dessiner tous les éléments du menu
+    # dessiner tous les éléments du menu
     def draw(self, screen):
         screen.blit(self.bg_img, (0, 0))
 
@@ -74,11 +80,11 @@ class Scoreboard:
         self.menu.draw(screen)
 
 
-    #dessiner le background du scoreboard
+    # dessiner le background du scoreboard
     def draw_scoreboard(self, screen):
         screen.blit(self.leaderboard, (100, 50))
 
-    #fonction pour savoir s'il faut changer de
+    # fonction pour savoir s'il faut changer de
     def updateLevel(self):
         if InputManager.echap_pressed:
             return Levels.MENU
