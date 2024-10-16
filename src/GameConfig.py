@@ -7,7 +7,7 @@ class GameConfig:
     REFRESH_RATE = 60
     SCROLL_SPEED = -6
     GROUND_SPACE = 50
-    DEFAULT_LEVEL = Levels.SCOREBOARD
+    DEFAULT_LEVEL = Levels.GAME
     GRAVITY_FORCE = 3000
     FONT = 'assets/policeFlappy.ttf'
 
