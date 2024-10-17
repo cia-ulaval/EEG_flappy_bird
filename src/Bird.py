@@ -35,15 +35,15 @@ class Bird(pygame.sprite.Sprite):
         self.const_rect.center += self.velocity * dt
 
         # limit the character to the screen limit
-        if self.const_rect.centery > GameConfig.SCREEN_DIMENSION.y - GameConfig.GROUND_SPACE/2:
-            self.const_rect.centery = GameConfig.SCREEN_DIMENSION.y - GameConfig.GROUND_SPACE/2
+        if self.const_rect.centery > GameConfig.SCREEN_DIMENSION.y - GameConfig.GROUND_SPACE/2.5:
+            self.const_rect.centery = GameConfig.SCREEN_DIMENSION.y - GameConfig.GROUND_SPACE/2.5
             self.velocity.y = 0
 
         # change back to default sprite if finished jump
-        next_image = self.const_mid_flap_image
+        next_image = self.const_flap_image
         if pygame.time.get_ticks() > self.jump_timer:
             next_image = self.const_mid_flap_image
-        if pygame.time.get_ticks() > self.jump_timer + 30:
+        if pygame.time.get_ticks() > self.jump_timer + GameConfig.FLAP_ANIMATION_TIMING/2:
             next_image = self.const_image
 
 
@@ -59,9 +59,8 @@ class Bird(pygame.sprite.Sprite):
             self.const_rect.centery)
 
     def jump(self, dt):
-        # changing frame for flap
-        self.image = self.const_flap_image
-        self.jump_timer = pygame.time.get_ticks() + 75
+        # timer for flap animation
+        self.jump_timer = pygame.time.get_ticks() + GameConfig.FLAP_ANIMATION_TIMING
         
         # velocity change for jump
         self.velocity.y = -self.JUMP_FORCE
@@ -71,7 +70,7 @@ class Bird(pygame.sprite.Sprite):
 
     def crashed(self):
         crashed = False
-        if self.const_rect.centery == GameConfig.SCREEN_DIMENSION.y - GameConfig.GROUND_SPACE/2:
+        if self.const_rect.centery == GameConfig.SCREEN_DIMENSION.y - GameConfig.GROUND_SPACE/2.5:
             crashed = True
         return crashed
 

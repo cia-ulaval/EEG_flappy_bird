@@ -20,9 +20,9 @@ class Scoreboard:
     # initialiser les variables
     def init_variables(self):
 
-        self.GOLD = (180, 180, 3)
-        self.SILVER = (111, 111, 111)
-        self.BRONZE = (147, 105, 50)
+        self.GOLD = (191, 150, 37)
+        self.SILVER = (138, 158, 163)
+        self.BRONZE = (177, 89, 26)
         self.WHITE = (255, 255, 255)
         self.BLACK = (0, 0, 0)
         self.SCOREBOARD_FONT_TILE_SIZE = 40
