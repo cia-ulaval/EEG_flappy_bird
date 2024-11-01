@@ -12,3 +12,5 @@ class GameConfig:
     FONT = 'assets/policeFlappy.ttf'
     FLAP_ANIMATION_TIMING = 100
 
+
+
