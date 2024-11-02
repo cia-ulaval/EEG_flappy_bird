@@ -16,7 +16,6 @@ def update_level():
     else:
         return Levels.SCOREBOARD
 
-
 class Scoreboard:
     def __init__(self, screen:pygame.Surface):
         self.data = json.load(open("data/scores.json"))
@@ -45,18 +44,15 @@ class Scoreboard:
         self.theme.title_bar_style = pm.widgets.MENUBAR_STYLE_NONE
         self.theme.background_color = (0, 0, 255, 0)
 
-
     def resize_components(self):
         self.bg_img, _ = load_image('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
         self.leaderboard, _ = load_image('assets/bgScoreboard.png',
                                          resize=(GameConfig.SCREEN_DIMENSION[0] - 200, GameConfig.SCREEN_DIMENSION[1] - 50))
 
-
     def create_menu(self):
         self.menu.set_relative_position(50, 55)
         self.menu.add.label(title="Scoreboard\n\n", font_size=self.SCOREBOARD_FONT_TILE_SIZE, font_color=self.BLACK,
                             font_name=pygame_menu.font.FONT_8BIT)
-
 
     def indent_score_indexes(self):
         return int(log10(len(self.data.values()))) + 1
@@ -72,9 +68,7 @@ class Scoreboard:
                                       f"{item['nom'][:15]:^{indent_names}}"
                                       f"{item['score']:>4}\n",
                     font_color=[self.GOLD, self.SILVER, self.BRONZE, self.BLACK][min(index, 3)],
-                    font_name=GameConfig.FONT,
-                                        font_size=self.SCOREBOARD_FONT_P_SIZE)
-
+                    font_name=GameConfig.FONT, font_size=self.SCOREBOARD_FONT_P_SIZE)
 
     def draw(self, screen):
         screen.blit(self.bg_img, (0, 0))
@@ -82,7 +76,5 @@ class Scoreboard:
         self.draw_scoreboard(screen)
         self.menu.draw(screen)
 
-
     def draw_scoreboard(self, screen):
         screen.blit(self.leaderboard, (100, 50))
-

@@ -1,8 +1,6 @@
 import pygame
 from src.util import load_image, rotate_around_center
-
 from src.GameConfig import GameConfig
-
 
 class Bird(pygame.sprite.Sprite):
     def __init__(self, screen: pygame.Surface):
@@ -15,7 +13,6 @@ class Bird(pygame.sprite.Sprite):
         self.image = self.const_image
         self.rect = self.const_rect
         self.first_jump = True
-
         self.jump_timer = 0
         self.velocity = pygame.Vector2(0, 0)
         self.JUMP_FORCE = 800

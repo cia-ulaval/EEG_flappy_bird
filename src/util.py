@@ -3,7 +3,7 @@ from src.GameConfig import GameConfig
 import pygame
 
 #####################################################
-# Utility python module whose objective is to bring
+# Utility python module which objective is to bring
 # together functions useful services that would be
 # relevant to share throughout the project
 #####################################################
@@ -19,10 +19,8 @@ def load_image(complete_path, colorkey=None, rescale:pygame.Vector2=None, resize
         rescale (pygame.Vector2, optional): Scaling of the object. Defaults to None, change it to trigger it.
         resize (pygame.Vector2, optional): Resizing the image. Defaults to None, change it to trigger it.
 
-
     Returns:
         pygame.Surface, pygame.Rect: Loaded image.
-
     """
     image = pygame.image.load(complete_path)
 

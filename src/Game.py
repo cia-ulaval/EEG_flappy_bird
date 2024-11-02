@@ -5,7 +5,6 @@ from src.GameConfig import GameConfig
 from src.LEVELS import Levels
 from src.util import load_image
 import pygame
-from pygame_menu import widgets
 
 class Game:
     def __init__(self, screen:pygame.Surface, game_manager:GameManager):
@@ -18,7 +17,6 @@ class Game:
         self.ground_img, _ = load_image('assets/ground.png')
         self.group = pygame.sprite.RenderPlain((self.bird))
         self.game_manager = game_manager
-
 
     def click(self):
        pass

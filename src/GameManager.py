@@ -30,7 +30,6 @@ class GameManager:
         pygame.init()
         pygame.display.set_caption(GameConfig.WINDOW_NAME)
 
-
     def start_application(self):
         print('Application Flappy_EEG starting...')
         self.game_loop()
@@ -44,9 +43,7 @@ class GameManager:
                     self.running = False
                 else:
                     InputManager.handle_event(event)
-
             self.screen.blit(self.bg_img, (0, 0))
-
             match self.currentLevel:
                 case Levels.GAME:
                     self.game.update(self.dt)
@@ -64,11 +61,8 @@ class GameManager:
                 case Levels.CONFIG:
                     #TODO
                     pass
-
             pygame.display.flip()
-
             self.dt = self.clock.tick(GameConfig.REFRESH_RATE) / 1000
-
         pygame.quit()
 
     def set_level(self, level:Levels):
