@@ -11,4 +11,3 @@ class GameConfig:
     GRAVITY_FORCE = 3000
     FONT = 'assets/policeFlappy.ttf'
     FLAP_ANIMATION_TIMING = 100
-

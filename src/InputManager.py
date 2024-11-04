@@ -4,7 +4,6 @@ class InputManager:
     jump_down = False
     echap_pressed = False
 
-
     @staticmethod
     def handle_event(event:pygame.event.Event):
         if event.type == pygame.KEYDOWN:
