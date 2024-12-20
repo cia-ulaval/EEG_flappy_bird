@@ -58,4 +58,4 @@ Maintenant la partie fun! Le projet est bien rudimentaire pour l'instant, mais v
 # D'autres questions?
 Allez voir sur le Discord pour les heures d'ouverture du local pour aller travailler sur le projet/demander de l'aide!
 
-Moi mon nom est Louis :), je suis VP-recrutement du CIA, mais je travaille aussi sur le projet EEG, pour la partie Jeu! Mes heures de permanence sont le <b>Lundi de 9h à 12h</b>. Au plaisir de vous y voir :)
+Moi mon nom est Louis :), je suis VP-recrutement du CIA, mais je travaille aussi sur le projet EEG, pour la partie Jeu!
