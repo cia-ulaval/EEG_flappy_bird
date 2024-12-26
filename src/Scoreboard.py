@@ -23,7 +23,6 @@ class Scoreboard:
         self.SILVER = (138, 158, 163)
         self.BRONZE = (177, 89, 26)
         self.WHITE = (255, 255, 255)
-        self.BLACK = (0, 0, 0)
         self.SCOREBOARD_FONT_TILE_SIZE = 40
         self.SCOREBOARD_FONT_P_SIZE = 20
         self.theme = pm.themes.THEME_SOLARIZED.copy()
@@ -51,7 +50,7 @@ class Scoreboard:
 
     def create_menu(self):
         self.menu.set_relative_position(50, 55)
-        self.menu.add.label(title="Scoreboard\n\n", font_size=self.SCOREBOARD_FONT_TILE_SIZE, font_color=self.BLACK,
+        self.menu.add.label(title="Scoreboard\n\n", font_size=self.SCOREBOARD_FONT_TILE_SIZE, font_color=GameConfig.FONT_COLOR,
                             font_name=pygame_menu.font.FONT_8BIT)
 
     def indent_score_indexes(self):
@@ -67,7 +66,7 @@ class Scoreboard:
             self.menu.add.label(title=f"{index+1:<{indent_index}}"
                                       f"{item['nom'][:15]:^{indent_names}}"
                                       f"{item['score']:>4}\n",
-                    font_color=[self.GOLD, self.SILVER, self.BRONZE, self.BLACK][min(index, 3)],
+                    font_color=[self.GOLD, self.SILVER, self.BRONZE, GameConfig.FONT_COLOR][min(index, 3)],
                     font_name=GameConfig.FONT, font_size=self.SCOREBOARD_FONT_P_SIZE)
 
     def draw(self, screen):

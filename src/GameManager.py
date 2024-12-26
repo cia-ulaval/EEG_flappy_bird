@@ -4,6 +4,7 @@ from src.LEVELS import Levels
 from pygame import Vector2
 from src.GameConfig import GameConfig
 from src.Game import Game
+from src.MainMenu import MainMenu
 from src.Scoreboard import Scoreboard, update_level
 from src.InputManager import InputManager
 
@@ -23,6 +24,7 @@ class GameManager:
         self.game = Game(game_manager=self, screen=self.screen)
         self.clock = pygame.time.Clock()
         self.setup_pygame()
+        self.menu = MainMenu(screen=self.screen)
         self.scoreboard = Scoreboard(screen=self.screen)
 
     def setup_pygame(self):
@@ -50,8 +52,9 @@ class GameManager:
                     self.game.draw(self.screen)
                     pygame.display.flip()
                 case Levels.MENU:
-                    pass
-                    #TODO
+                    self.game.update_bg()
+                    self.game.draw_ground(self.screen)
+                    self.menu.draw(self.screen)
                 case Levels.SCOREBOARD:
                     self.game.update_bg()
                     self.game.draw_ground(self.screen)
