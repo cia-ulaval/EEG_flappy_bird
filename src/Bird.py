@@ -10,9 +10,12 @@ class Bird(pygame.sprite.Sprite):
         self.const_mid_flap_image, self.const_mid_flap_rect = load_image("assets/brainMidFlap.png", -1)
         self.const_rect.center = (screen.get_width() / 2,
                                   screen.get_height() / 2)
+
+
         self.image = self.const_image
         self.rect = self.const_rect
         self.first_jump = True
+        self.collision_rect = self.const_rect.inflate(-20, -20)
         self.jump_timer = 0
         self.velocity = pygame.Vector2(0, 0)
         self.JUMP_FORCE = 800
@@ -21,6 +24,7 @@ class Bird(pygame.sprite.Sprite):
     def update(self, dt):
         self.gravity(dt)
         self.const_rect.center += self.velocity * dt
+        self.collision_rect.center = self.rect.center
 
         # limit the bird to the screen limit
         if self.const_rect.centery > GameConfig.SCREEN_DIMENSION.y - GameConfig.GROUND_SPACE / 2.5:
