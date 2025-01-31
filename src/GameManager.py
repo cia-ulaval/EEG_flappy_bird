@@ -11,6 +11,7 @@ from src.InputManager import InputManager
 
 class GameManager:
     def __init__(self):
+        pygame.init()
         self.dt = 0
         self.running = True
         self.currentLevel = GameConfig.DEFAULT_LEVEL
