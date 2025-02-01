@@ -43,8 +43,7 @@ class Game:
         self.pipes.draw(screen)
         self.draw_ground(screen)
         self.group.draw(screen)
-        self.draw_score()  # Call draw_score to display the score on the screen
-
+        self.draw_score()
 
     def update_bg(self):
         self.scroll += self.scroll_speed
@@ -52,11 +51,9 @@ class Game:
             self.scroll = 0
 
     def update(self, dt):
-
         if InputManager.is_jump_down():
             self.bird.jump(dt)
         if any(pipe.rect.colliderect(self.bird.collision_rect) for pipe in self.pipes):
-            print("Collision detected! Game over.")
             self.scroll_speed = 0
             self.game_manager.set_level(Levels.SCOREBOARD)
 
@@ -84,7 +81,6 @@ class Game:
             self.pipe_timer -= 1
 
     def spawn_pipes(self):
-        # Spawn a pair of pipes
         screen_width = GameConfig.SCREEN_DIMENSION[0]
         gap_height = random.randint(150, 200)
         pipe_height = 600
@@ -93,7 +89,6 @@ class Game:
         y_top = random.randint(-400, -200)
         y_bottom = y_top + gap_height + pipe_height
 
-        # Add top and bottom pipes to the group
         self.pipes.add(Pipes(self.screen, x_position, y_top, "up"))
         self.pipes.add(Pipes(self.screen, x_position, y_bottom, "down"))
         print(f"Spawned pipes at ({x_position}, {y_top}) and ({x_position}, {y_bottom})")

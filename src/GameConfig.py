@@ -12,3 +12,5 @@ class GameConfig:
     FONT = 'assets/policeFlappy.ttf'
     FONT_COLOR = (0, 0, 0)
     FLAP_ANIMATION_TIMING = 100
+    MENU_FONT_TILE_SIZE = 40
+    MENU_FONT_P_SIZE = 20

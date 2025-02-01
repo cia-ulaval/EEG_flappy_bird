@@ -5,16 +5,16 @@ from pygame import Vector2
 from src.GameConfig import GameConfig
 from src.Game import Game
 from src.MainMenu import MainMenu
-from src.Scoreboard import Scoreboard, update_level
+from src.OptionsMenu import OptionsMenu
+from src.Scoreboard import Scoreboard
 from src.InputManager import InputManager
-
 
 class GameManager:
     def __init__(self):
         pygame.init()
         self.dt = 0
         self.running = True
-        self.currentLevel = GameConfig.DEFAULT_LEVEL
+        self.current_level = GameConfig.DEFAULT_LEVEL
         self.scroll = 0
         self.scroll_speed = GameConfig.SCROLL_SPEED
         self.bg_img = pygame.transform.scale(pygame.image.load('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
@@ -22,11 +22,12 @@ class GameManager:
         self.ground_img = pygame.image.load('assets/ground.png')
         self.screen = pygame.display.set_mode(
             Vector2(GameConfig.SCREEN_DIMENSION.x, GameConfig.SCREEN_DIMENSION.y + GameConfig.GROUND_SPACE))
-        self.game = Game(game_manager=self, screen=self.screen)
         self.clock = pygame.time.Clock()
         self.setup_pygame()
-        self.menu = MainMenu(screen=self.screen)
-        self.scoreboard = Scoreboard(screen=self.screen)
+        self.game = Game(game_manager=self, screen=self.screen)
+        self.menu = MainMenu(screen=self.screen, game_manager=self)
+        self.optionsMenu = OptionsMenu(screen=self.screen, game_manager=self)
+        self.scoreboard = Scoreboard(screen=self.screen, game_manager=self)
 
     def setup_pygame(self):
         pygame.display.set_icon(self.icon_img)
@@ -47,7 +48,7 @@ class GameManager:
                 else:
                     InputManager.handle_event(event)
             self.screen.blit(self.bg_img, (0, 0))
-            match self.currentLevel:
+            match self.current_level:
                 case Levels.GAME:
                     self.game.update(self.dt)
                     self.game.draw(self.screen)
@@ -55,19 +56,23 @@ class GameManager:
                 case Levels.MENU:
                     self.game.update_bg()
                     self.game.draw_ground(self.screen)
+                    self.menu.menu.update(events)
                     self.menu.draw(self.screen)
                 case Levels.SCOREBOARD:
                     self.game.update_bg()
                     self.game.draw_ground(self.screen)
-                    self.scoreboard.draw(self.screen)
                     self.scoreboard.menu.update(events)
-                    self.currentLevel = update_level()
+                    self.scoreboard.update()
+                    self.scoreboard.draw(self.screen)
                 case Levels.CONFIG:
-                    #TODO
+                    self.game.update_bg()
+                    self.game.draw_ground(self.screen)
+                    self.optionsMenu.menu.update(events)
+                    self.optionsMenu.draw(self.screen)
                     pass
             pygame.display.flip()
             self.dt = self.clock.tick(GameConfig.REFRESH_RATE) / 1000
         pygame.quit()
 
     def set_level(self, level:Levels):
-        self.currentLevel = level
+        self.current_level = level
