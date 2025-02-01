@@ -7,12 +7,12 @@ import pygame_menu.font
 from src.InputManager import InputManager
 from src.util import load_image
 from src.GameConfig import GameConfig
+from src import GameManager
 from src.LEVELS import Levels
 
 class Scoreboard:
-    def __init__(self, screen:pygame.Surface, game_manager):
-        from src.GameManager import GameManager
-        self.game_manager: GameManager = game_manager
+    def __init__(self, screen:pygame.Surface, game_manager: GameManager):
+        self.game_manager = game_manager
         self.data = json.load(open("data/scores.json"))
         self.GOLD = (191, 150, 37)
         self.SILVER = (138, 158, 163)

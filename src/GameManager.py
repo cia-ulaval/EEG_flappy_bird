@@ -76,3 +76,4 @@ class GameManager:
 
     def set_level(self, level:Levels):
         self.current_level = level
+

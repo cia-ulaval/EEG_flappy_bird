@@ -5,11 +5,11 @@ import pygame_menu.font
 from src.util import load_image
 from src.GameConfig import GameConfig
 from src.LEVELS import Levels
+from src import GameManager
 
 class MainMenu:
-    def __init__(self, screen:pygame.Surface, game_manager):
-        from src.GameManager import GameManager
-        self.game_manager: GameManager = game_manager
+    def __init__(self, screen:pygame.Surface, game_manager: GameManager):
+        self.game_manager = game_manager
         self.MENU_FONT_TILE_SIZE = 40
         self.MENU_FONT_P_SIZE = 20
         self.screen = screen
