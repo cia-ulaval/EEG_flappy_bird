@@ -7,25 +7,20 @@ import pygame_menu.font
 from src.InputManager import InputManager
 from src.util import load_image
 from src.GameConfig import GameConfig
+from src import GameManager
 from src.LEVELS import Levels
 
-
-def update_level():
-    if InputManager.echap_pressed:
-        return Levels.MENU
-    else:
-        return Levels.SCOREBOARD
-
 class Scoreboard:
-    def __init__(self, screen:pygame.Surface):
+    def __init__(self, screen:pygame.Surface, game_manager: GameManager):
+        self.game_manager = game_manager
         self.data = json.load(open("data/scores.json"))
         self.GOLD = (191, 150, 37)
         self.SILVER = (138, 158, 163)
         self.BRONZE = (177, 89, 26)
         self.WHITE = (255, 255, 255)
-        self.BLACK = (0, 0, 0)
         self.SCOREBOARD_FONT_TILE_SIZE = 40
         self.SCOREBOARD_FONT_P_SIZE = 20
+
         self.theme = pm.themes.THEME_SOLARIZED.copy()
         self.bg_img = pygame.transform.scale(pygame.image.load('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.leaderboard = pygame.transform.scale(pygame.image.load('assets/bgScoreboard.png'),
@@ -34,11 +29,11 @@ class Scoreboard:
                             height=GameConfig.SCREEN_DIMENSION[1] - 100,
                             theme=self.theme,
                             title="")
-
         self.create_theme()
         self.create_menu()
         self.resize_components()
         self.add_games_to_leaderboard()
+        self.add_return_button()
 
     def create_theme(self):
         self.theme.title_bar_style = pm.widgets.MENUBAR_STYLE_NONE
@@ -51,7 +46,7 @@ class Scoreboard:
 
     def create_menu(self):
         self.menu.set_relative_position(50, 55)
-        self.menu.add.label(title="Scoreboard\n\n", font_size=self.SCOREBOARD_FONT_TILE_SIZE, font_color=self.BLACK,
+        self.menu.add.label(title="Scoreboard\n\n", font_size=self.SCOREBOARD_FONT_TILE_SIZE, font_color=GameConfig.FONT_COLOR,
                             font_name=pygame_menu.font.FONT_8BIT)
 
     def indent_score_indexes(self):
@@ -67,8 +62,13 @@ class Scoreboard:
             self.menu.add.label(title=f"{index+1:<{indent_index}}"
                                       f"{item['nom'][:15]:^{indent_names}}"
                                       f"{item['score']:>4}\n",
-                    font_color=[self.GOLD, self.SILVER, self.BRONZE, self.BLACK][min(index, 3)],
+                    font_color=[self.GOLD, self.SILVER, self.BRONZE, GameConfig.FONT_COLOR][min(index, 3)],
                     font_name=GameConfig.FONT, font_size=self.SCOREBOARD_FONT_P_SIZE)
+
+    def add_return_button(self):
+        self.menu.add.button(title="Retour", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
+                                    font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.MENU),
+                                    background_color=None, border_width=0)
 
     def draw(self, screen):
         screen.blit(self.bg_img, (0, 0))
@@ -78,3 +78,10 @@ class Scoreboard:
 
     def draw_scoreboard(self, screen):
         screen.blit(self.leaderboard, (100, 50))
+
+    def update(self):
+        if InputManager.echap_pressed:
+            self.set_level(Levels.MENU)
+
+    def set_level(self, level):
+        self.game_manager.set_level(level)
