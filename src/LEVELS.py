@@ -5,4 +5,5 @@ class Levels(Enum):
     SCOREBOARD = 2
     CONFIG = 3
     GAME = 4
+    NOPIPE = 5
 
