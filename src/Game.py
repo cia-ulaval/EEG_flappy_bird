@@ -63,18 +63,13 @@ class Game:
         else:
             self.scroll_speed = GameConfig.SCROLL_SPEED
         self.update_bg()
-
         if not self.bird.first_jump:
-
             self.pipes.update()
             self.group.update(dt)
-
             for pipe in self.pipes:
                 if pipe.pipe_type == "down" and not pipe.passed and pipe.rect.right < self.bird.rect.left:
                     pipe.passed = True
                     self.add_score()
-
-
             if self.pipe_timer <= 0:
                 self.spawn_pipes()
                 self.pipe_timer = random.randint(50, 100)  # Reset timer to a random value

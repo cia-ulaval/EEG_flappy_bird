@@ -75,5 +75,7 @@ class GameManager:
         pygame.quit()
 
     def set_level(self, level:Levels):
+        if level == Levels.GAME:
+            self.game.__init__(game_manager=self, screen=self.screen)
         self.current_level = level
 
