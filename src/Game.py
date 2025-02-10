@@ -50,7 +50,7 @@ class Game:
         if abs(self.scroll) > 450:
             self.scroll = 0
 
-    def update(self, dt):
+    def update(self, dt, isPipe : bool = True):
         if InputManager.is_jump_down():
             self.bird.jump(dt)
         if any(pipe.rect.colliderect(self.bird.collision_rect) for pipe in self.pipes) | self.bird.crashed():
@@ -58,7 +58,7 @@ class Game:
         else:
             self.scroll_speed = GameConfig.SCROLL_SPEED
         self.update_bg()
-        if not self.bird.first_jump:
+        if not self.bird.first_jump and isPipe :
             self.pipes.update()
             self.group.update(dt)
             for pipe in self.pipes:
@@ -69,6 +69,9 @@ class Game:
                 self.spawn_pipes()
                 self.pipe_timer = random.randint(50, 100)  # Reset timer to a random value
             self.pipe_timer -= 1
+            
+        elif not self.bird.first_jump and not isPipe:
+            self.group.update(dt)
 
     def spawn_pipes(self):
         screen_width = GameConfig.SCREEN_DIMENSION[0]

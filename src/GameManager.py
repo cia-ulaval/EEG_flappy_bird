@@ -73,7 +73,11 @@ class GameManager:
                     self.game.draw_ground(self.screen)
                     self.optionsMenu.menu.update(events)
                     self.optionsMenu.draw(self.screen)
-                    pass
+                case Levels.NOPIPE:
+                    self.game.update(self.dt, isPipe=False)
+                    self.game.draw(self.screen)
+                    pygame.display.flip()
+                    
             pygame.display.flip()
             self.dt = self.clock.tick(GameConfig.REFRESH_RATE) / 1000
         pygame.quit()

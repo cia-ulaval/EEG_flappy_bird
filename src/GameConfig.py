@@ -7,7 +7,7 @@ class GameConfig:
     REFRESH_RATE = 60
     SCROLL_SPEED = -6
     GROUND_SPACE = 50
-    DEFAULT_LEVEL = Levels.MENU
+    DEFAULT_LEVEL = Levels.NOPIPE
     GRAVITY_FORCE = 3000
     FONT = 'assets/policeFlappy.ttf'
     FONT_COLOR = (0, 0, 0)
