@@ -1,3 +1,5 @@
+import random
+
 import pygame
 import pygame.gfxdraw
 from src.LEVELS import Levels
@@ -12,6 +14,7 @@ from src.InputManager import InputManager
 class GameManager:
     def __init__(self):
         pygame.init()
+        self.username = "user" + str(random.randint(1000, 9999))
         self.dt = 0
         self.running = True
         self.current_level = GameConfig.DEFAULT_LEVEL
@@ -61,6 +64,7 @@ class GameManager:
                 case Levels.SCOREBOARD:
                     self.game.update_bg()
                     self.game.draw_ground(self.screen)
+                    self.scoreboard = Scoreboard(screen=self.screen, game_manager=self)
                     self.scoreboard.menu.update(events)
                     self.scoreboard.update()
                     self.scoreboard.draw(self.screen)
@@ -79,3 +83,12 @@ class GameManager:
             self.game.__init__(game_manager=self, screen=self.screen)
         self.current_level = level
 
+    def set_username(self, username):
+        self.username = username
+
+    def get_username(self):
+        return self.username
+
+    def record_score(self, score):
+        self.scoreboard.record_score(self.username, score)
+        self.set_level(Levels.SCOREBOARD)
