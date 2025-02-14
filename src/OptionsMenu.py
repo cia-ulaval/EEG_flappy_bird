@@ -43,6 +43,10 @@ class OptionsMenu:
         self.menu.add.text_input(title="Nom   ", textinput_id="user_input", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
                                 font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_username,
                                 background_color=None, border_width=0, maxchar=10)
+        self.menu.add.toggle_switch(title="Tuyaux", font_size=GameConfig.MENU_FONT_P_SIZE,
+                                 font_color=GameConfig.FONT_COLOR,
+                                 font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_pipes_active,
+                                 default=True, background_color=None, border_width=0)
         self.menu.add.range_slider(title="Son", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
                                    font_name=pygame_menu.font.FONT_8BIT, onchange=set_sound_level,
                                    range_values=[0, 100], default=50, background_color=None, border_width=0, increment=1)
@@ -62,3 +66,8 @@ class OptionsMenu:
 
     def set_username(self, username):
         self.game_manager.set_username(username)
+
+    def set_pipes_active(self, pipes_active):
+        self.game_manager.set_pipes_active(pipes_active)
+
+

@@ -17,6 +17,7 @@ class GameManager:
         self.username = "user" + str(random.randint(1000, 9999))
         self.dt = 0
         self.running = True
+        self.pipes_active = True
         self.current_level = GameConfig.DEFAULT_LEVEL
         self.scroll = 0
         self.scroll_speed = GameConfig.SCROLL_SPEED
@@ -74,7 +75,7 @@ class GameManager:
                     self.optionsMenu.menu.update(events)
                     self.optionsMenu.draw(self.screen)
                 case Levels.NOPIPE:
-                    self.game.update(self.dt, isPipe=False)
+                    self.game.update(self.dt)
                     self.game.draw(self.screen)
                     pygame.display.flip()
                     
@@ -89,6 +90,12 @@ class GameManager:
 
     def set_username(self, username):
         self.username = username
+
+    def set_pipes_active(self, pipes_active):
+        self.pipes_active = pipes_active
+
+    def get_pipes_active(self):
+        return self.pipes_active
 
     def get_username(self):
         return self.username

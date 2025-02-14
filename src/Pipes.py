@@ -20,7 +20,6 @@ class Pipes(pygame.sprite.Sprite):
         self.pipe_type = pipe_type
 
     def update(self):
-        #print(self.rect)
         self.rect.x += GameConfig.SCROLL_SPEED
         if self.rect.x <= -GameConfig.SCREEN_DIMENSION.x:
             self.kill()
