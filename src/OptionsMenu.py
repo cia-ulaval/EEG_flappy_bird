@@ -40,6 +40,9 @@ class OptionsMenu:
         self.menu.set_relative_position(50, 55)
         self.menu.add.label(title="Options\n\n", font_size=GameConfig.MENU_FONT_TILE_SIZE, font_color=GameConfig.FONT_COLOR,
                             font_name=pygame_menu.font.FONT_8BIT)
+        self.menu.add.text_input(title="Nom   ", textinput_id="user_input", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
+                                font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_username,
+                                background_color=None, border_width=0, maxchar=10)
         self.menu.add.range_slider(title="Son", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
                                    font_name=pygame_menu.font.FONT_8BIT, onchange=set_sound_level,
                                    range_values=[0, 100], default=50, background_color=None, border_width=0, increment=1)
@@ -49,7 +52,13 @@ class OptionsMenu:
     def draw(self, screen):
         screen.blit(self.bg_img, (0, 0))
         self.menu.draw(screen)
+        username = self.game_manager.get_username()
+        text_input = self.menu.get_widget("user_input")
+        if text_input:
+            text_input.set_value(username)
 
     def set_level(self, level):
         self.game_manager.set_level(level)
 
+    def set_username(self, username):
+        self.game_manager.set_username(username)

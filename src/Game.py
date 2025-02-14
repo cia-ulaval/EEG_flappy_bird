@@ -34,7 +34,7 @@ class Game:
 
     def draw_score(self):
         score_text = self.font.render(f"Score: {self.score}", True, (255, 255, 255))  # White text
-        self.screen.blit(score_text, (10, 10))  # Draw in the top-left corner
+        self.screen.blit(score_text, (10, 10))
 
     def draw_ground(self,screen:pygame.Surface):
         screen.blit(self.ground_img, (self.scroll, GameConfig.SCREEN_DIMENSION.y))
@@ -53,15 +53,8 @@ class Game:
     def update(self, dt, isPipe : bool = True):
         if InputManager.is_jump_down():
             self.bird.jump(dt)
-        if any(pipe.rect.colliderect(self.bird.collision_rect) for pipe in self.pipes):
-            self.scroll_speed = 0
-            self.game_manager.set_level(Levels.SCOREBOARD)
-
-        elif self.bird.crashed() and isPipe:
-            self.scroll_speed = 0
-            self.game_manager.set_level(Levels.SCOREBOARD)
-        elif self.bird.crashed() and not isPipe:
-            self.scroll_speed = 0
+        if any(pipe.rect.colliderect(self.bird.collision_rect) for pipe in self.pipes) | self.bird.crashed():
+            self.game_over()
         else:
             self.scroll_speed = GameConfig.SCROLL_SPEED
         self.update_bg()
@@ -93,6 +86,12 @@ class Game:
         self.pipes.add(Pipes(self.screen, x_position, y_bottom, "down"))
         print(f"Spawned pipes at ({x_position}, {y_top}) and ({x_position}, {y_bottom})")
         print(f"Current pipes in group: {self.pipes.sprites()}")
+
+    def game_over(self):
+        self.scroll_speed = 0
+        self.game_manager.record_score(self.score)
+        self.game_manager.set_level(Levels.SCOREBOARD)
+
 
 
 
