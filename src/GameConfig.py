@@ -1,16 +1,20 @@
 from pygame import Vector2
-from src.LEVELS import Levels
+from src.Levels import Levels
 
 class GameConfig:
     SCREEN_DIMENSION = Vector2(800, 600)
     WINDOW_NAME = "Flappy Brain"
     REFRESH_RATE = 60
-    SCROLL_SPEED = -6
+    INITIAL_SCROLL_SPEED = -4
     GROUND_SPACE = 50
-    DEFAULT_LEVEL = Levels.NOPIPE
+    DEFAULT_LEVEL = Levels.MENU
     GRAVITY_FORCE = 3000
     FONT = 'assets/policeFlappy.ttf'
     FONT_COLOR = (0, 0, 0)
     FLAP_ANIMATION_TIMING = 100
     MENU_FONT_TILE_SIZE = 40
     MENU_FONT_P_SIZE = 20
+    SCROLL_SPEED_AUGMENTATIONS = [0.1, 0.1, 0.3]
+    DIFFICULTY_COEFFICIENTS = [0.01, 0.02, 0.03]
+    MIN_DIFFICULTY_COEFFICIENTS = [0.8, 0.7, 0.5]
+    SCORES_DIFFICULTY_CHECKPOINTS = [1, 1, 1]

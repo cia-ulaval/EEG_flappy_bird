@@ -3,14 +3,24 @@ import pygame
 import pygame_menu.font
 
 from src import GameManager
+from src.Difficulty import Difficulty
 from src.util import load_image
 from src.GameConfig import GameConfig
-from src.LEVELS import Levels
+from src.Levels import Levels
 
 
 def set_sound_level(sound_level):
     volume = sound_level / 100
     pygame.mixer.music.set_volume(volume)
+
+
+def format_difficulties():
+    difficulty = sorted(
+        [(name, value.value) for name, value in Difficulty.__members__.items()],
+        key=lambda x: x[1]
+    )
+    return difficulty
+
 
 class OptionsMenu:
     def __init__(self, screen:pygame.Surface, game_manager: GameManager):
@@ -42,7 +52,11 @@ class OptionsMenu:
                             font_name=pygame_menu.font.FONT_8BIT)
         self.menu.add.text_input(title="Nom   ", textinput_id="user_input", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
                                 font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_username,
-                                background_color=None, border_width=0, maxchar=10)
+                                background_color=None, border_width=0, maxchar=10, default=self.game_manager.get_username())
+        self.menu.add.dropselect(title="Difficulte", font_size=GameConfig.MENU_FONT_P_SIZE,
+                                 font_color=GameConfig.FONT_COLOR, items=format_difficulties(),
+                                 font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_difficulty,
+                                 background_color=None, border_width=0, default=0)
         self.menu.add.toggle_switch(title="Tuyaux", font_size=GameConfig.MENU_FONT_P_SIZE,
                                  font_color=GameConfig.FONT_COLOR,
                                  font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_pipes_active,
@@ -56,10 +70,6 @@ class OptionsMenu:
     def draw(self, screen):
         screen.blit(self.bg_img, (0, 0))
         self.menu.draw(screen)
-        username = self.game_manager.get_username()
-        text_input = self.menu.get_widget("user_input")
-        if text_input:
-            text_input.set_value(username)
 
     def set_level(self, level):
         self.game_manager.set_level(level)
@@ -67,7 +77,8 @@ class OptionsMenu:
     def set_username(self, username):
         self.game_manager.set_username(username)
 
+    def set_difficulty(self, value, difficulty):
+        self.game_manager.set_difficulty(difficulty)
+
     def set_pipes_active(self, pipes_active):
         self.game_manager.set_pipes_active(pipes_active)
-
-
