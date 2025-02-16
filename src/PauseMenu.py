@@ -39,8 +39,12 @@ class PauseMenu:
         self.menu.add.button(title="Reprendre", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
                              font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.GAME, True),
                              background_color=None, border_width=0)
+        self.menu.add.button(title="Retour au menu", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
+                             font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.MENU),
+                             background_color=None, border_width=0)
         self.menu.add.button(title="Quitter", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
-                             font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.MENU), background_color=None, border_width=0)
+                             font_name=pygame_menu.font.FONT_8BIT, action=lambda: pygame.quit(),
+                             background_color=None, border_width=0)
 
     def update(self):
         if InputManager.echap_pressed:
