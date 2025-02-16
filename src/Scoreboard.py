@@ -10,7 +10,7 @@ from src.InputManager import InputManager
 from src.util import load_image
 from src.GameConfig import GameConfig
 from src import GameManager
-from src.LEVELS import Levels
+from src.Levels import Levels
 
 class Scoreboard:
     def __init__(self, screen:pygame.Surface, game_manager: GameManager):
@@ -100,7 +100,6 @@ class Scoreboard:
         if username not in self.data.keys() or self.data[username] < score:
             self.data[username] = score
             self.write_new_scores()
-
 
     def write_new_scores(self):
         with open("data/scores.json", 'w+') as file:

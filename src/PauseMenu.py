@@ -2,16 +2,17 @@ import pygame_menu as pm
 import pygame
 import pygame_menu.font
 
+from src import GameManager
+from src.InputManager import InputManager
 from src.util import load_image
 from src.GameConfig import GameConfig
 from src.Levels import Levels
-from src import GameManager
 
-class MainMenu:
+
+class PauseMenu:
     def __init__(self, screen:pygame.Surface, game_manager: GameManager):
         self.game_manager = game_manager
-        self.MENU_FONT_TILE_SIZE = 40
-        self.MENU_FONT_P_SIZE = 20
+
         self.screen = screen
         self.game_manager = game_manager
         self.theme = pm.themes.THEME_SOLARIZED.copy()
@@ -27,30 +28,31 @@ class MainMenu:
 
     def create_theme(self):
         self.theme.title_bar_style = pm.widgets.MENUBAR_STYLE_NONE
-        self.theme.background_color = (0, 0, 255, 0)
 
     def resize_components(self):
         self.bg_img, _ = load_image('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
 
     def create_menu(self):
         self.menu.set_relative_position(50, 55)
-        self.menu.add.label(title="Flappy Brain EEG\n\n", font_size=self.MENU_FONT_TILE_SIZE, font_color=GameConfig.FONT_COLOR,
+        self.menu.add.label(title="Pause\n\n", font_size=GameConfig.MENU_FONT_TILE_SIZE, font_color=GameConfig.FONT_COLOR,
                             font_name=pygame_menu.font.FONT_8BIT)
-        self.menu.add.button(title="Commencer", font_size=self.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
-                            font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.GAME),
+        self.menu.add.button(title="Reprendre", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
+                             font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.GAME, True),
                              background_color=None, border_width=0)
-        self.menu.add.button(title="Tableau des scores", font_size=self.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
-                             font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.SCOREBOARD),
+        self.menu.add.button(title="Retour au menu", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
+                             font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.MENU),
                              background_color=None, border_width=0)
-        self.menu.add.button(title="Options", font_size=self.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
-                            font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.CONFIG),
-                            background_color=None, border_width=0)
-        self.menu.add.button(title="Quitter", font_size=self.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
-                            font_name=pygame_menu.font.FONT_8BIT, action=lambda: pygame.quit(), background_color=None, border_width=0)
+        self.menu.add.button(title="Quitter", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
+                             font_name=pygame_menu.font.FONT_8BIT, action=lambda: pygame.quit(),
+                             background_color=None, border_width=0)
+
+    def update(self):
+        if InputManager.echap_pressed:
+            self.set_level(Levels.GAME)
 
     def draw(self, screen):
         screen.blit(self.bg_img, (0, 0))
         self.menu.draw(screen)
 
-    def set_level(self, level):
-        self.game_manager.set_level(level)
+    def set_level(self, level, in_game=False):
+        self.game_manager.set_level(level, in_game)
