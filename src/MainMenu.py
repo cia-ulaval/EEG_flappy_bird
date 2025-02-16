@@ -4,7 +4,7 @@ import pygame_menu.font
 
 from src.util import load_image
 from src.GameConfig import GameConfig
-from src.LEVELS import Levels
+from src.Levels import Levels
 from src import GameManager
 
 class MainMenu:
