@@ -10,6 +10,7 @@ from src.GameConfig import GameConfig
 from src.Game import Game
 from src.MainMenu import MainMenu
 from src.OptionsMenu import OptionsMenu
+from src.PauseMenu import PauseMenu
 from src.Scoreboard import Scoreboard
 from src.InputManager import InputManager
 from src.Difficulty import Difficulty
@@ -37,8 +38,9 @@ class GameManager:
         self.clock = pygame.time.Clock()
         self.setup_pygame()
         self.game = Game(game_manager=self, screen=self.screen)
-        self.menu = MainMenu(screen=self.screen, game_manager=self)
-        self.optionsMenu = OptionsMenu(screen=self.screen, game_manager=self)
+        self.main_menu = MainMenu(screen=self.screen, game_manager=self)
+        self.pause_menu = PauseMenu(screen=self.screen, game_manager=self)
+        self.options_menu = OptionsMenu(screen=self.screen, game_manager=self)
         self.scoreboard = Scoreboard(screen=self.screen, game_manager=self)
 
     def setup_pygame(self):
@@ -68,8 +70,14 @@ class GameManager:
                 case Levels.MENU:
                     self.game.update_bg()
                     self.game.draw_ground(self.screen)
-                    self.menu.menu.update(events)
-                    self.menu.draw(self.screen)
+                    self.main_menu.menu.update(events)
+                    self.main_menu.draw(self.screen)
+                case Levels.PAUSE_MENU:
+                    self.game.update_bg()
+                    self.game.draw_ground(self.screen)
+                    self.pause_menu.menu.update(events)
+                    self.pause_menu.update()
+                    self.pause_menu.draw(self.screen)
                 case Levels.SCOREBOARD:
                     self.game.update_bg()
                     self.game.draw_ground(self.screen)
@@ -79,14 +87,14 @@ class GameManager:
                 case Levels.CONFIG:
                     self.game.update_bg()
                     self.game.draw_ground(self.screen)
-                    self.optionsMenu.menu.update(events)
-                    self.optionsMenu.draw(self.screen)
+                    self.options_menu.menu.update(events)
+                    self.options_menu.draw(self.screen)
             pygame.display.flip()
             self.dt = self.clock.tick(GameConfig.REFRESH_RATE) / 1000
         pygame.quit()
 
-    def set_level(self, level:Levels):
-        if level == Levels.GAME:
+    def set_level(self, level:Levels, in_game:bool = False):
+        if level == Levels.GAME and not in_game:
             self.game.__init__(game_manager=self, screen=self.screen)
         self.current_level = level
 

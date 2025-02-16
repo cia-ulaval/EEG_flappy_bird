@@ -3,6 +3,7 @@ from collections import deque
 
 from src import GameManager
 from src.Bird import Bird
+from src.Difficulty import Difficulty
 from src.Pipe import Pipe
 from src.InputManager import InputManager
 from src.GameConfig import GameConfig
@@ -64,6 +65,12 @@ class Game:
 
     def update(self, dt):
         pipes_active = self.game_manager.get_pipes_active()
+        if InputManager.echap_pressed:
+            self.game_manager.set_level(Levels.PAUSE_MENU)
+            self.bird.reset_velocity()
+            difficulty = self.game_manager.get_difficulty()
+            if difficulty is Difficulty.FACILE.value:
+                self.bird.reset_first_jump()
         if InputManager.is_jump_down():
             self.bird.jump(dt)
         if any(pipe.rect.colliderect(self.bird.collision_rect) for pipe in self.pipes) | self.bird.crashed():
