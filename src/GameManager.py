@@ -29,7 +29,6 @@ class GameManager:
         self.difficulty = Difficulty.FACILE.value
         self.current_level = GameConfig.DEFAULT_LEVEL
         self.scroll = 0
-        self.scroll_speed = GameConfig.INITIAL_SCROLL_SPEED
         self.bg_img = pygame.transform.scale(pygame.image.load('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.icon_img = pygame.image.load('assets/ico.png')
         self.ground_img = pygame.image.load('assets/ground.png')
