@@ -39,7 +39,7 @@ class MainMenu:
         self.menu.add.button(title="Commencer", font_size=self.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
                             font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.GAME),
                              background_color=None, border_width=0)
-        self.menu.add.button(title="Tableau des scores", font_size=self.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
+        self.menu.add.button(title="Tableau des pointages", font_size=self.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
                              font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.SCOREBOARD),
                              background_color=None, border_width=0)
         self.menu.add.button(title="Options", font_size=self.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,

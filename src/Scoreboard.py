@@ -49,7 +49,7 @@ class Scoreboard:
 
     def create_menu(self):
         self.menu.set_relative_position(50, 55)
-        self.menu.add.label(title="Scoreboard\n\n", font_size=self.SCOREBOARD_FONT_TILE_SIZE, font_color=GameConfig.FONT_COLOR,
+        self.menu.add.label(title="Pointages\n\n", font_size=self.SCOREBOARD_FONT_TILE_SIZE, font_color=GameConfig.FONT_COLOR,
                             font_name=pygame_menu.font.FONT_8BIT)
 
     def add_games_to_leaderboard(self):
