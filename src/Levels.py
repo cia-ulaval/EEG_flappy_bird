@@ -2,6 +2,7 @@ from enum import Enum
 
 class Levels(Enum):
     MENU = 1
-    SCOREBOARD = 2
-    CONFIG = 3
-    GAME = 4
+    PAUSE_MENU = 2
+    SCOREBOARD = 3
+    CONFIG = 4
+    GAME = 5
