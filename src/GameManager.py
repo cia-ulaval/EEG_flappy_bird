@@ -2,7 +2,9 @@ import random
 
 import pygame
 import pygame.gfxdraw
-from src.LEVELS import Levels
+
+from src import Difficulty
+from src.Levels import Levels
 from pygame import Vector2
 from src.GameConfig import GameConfig
 from src.Game import Game
@@ -10,6 +12,12 @@ from src.MainMenu import MainMenu
 from src.OptionsMenu import OptionsMenu
 from src.Scoreboard import Scoreboard
 from src.InputManager import InputManager
+from src.Difficulty import Difficulty
+
+
+def get_difficulty_from_value(value):
+    return next((diff for diff in Difficulty if diff.value == value), None)
+
 
 class GameManager:
     def __init__(self):
@@ -18,9 +26,9 @@ class GameManager:
         self.dt = 0
         self.running = True
         self.pipes_active = True
+        self.difficulty = Difficulty.FACILE.value
         self.current_level = GameConfig.DEFAULT_LEVEL
         self.scroll = 0
-        self.scroll_speed = GameConfig.SCROLL_SPEED
         self.bg_img = pygame.transform.scale(pygame.image.load('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.icon_img = pygame.image.load('assets/ico.png')
         self.ground_img = pygame.image.load('assets/ground.png')
@@ -65,7 +73,6 @@ class GameManager:
                 case Levels.SCOREBOARD:
                     self.game.update_bg()
                     self.game.draw_ground(self.screen)
-                    self.scoreboard = Scoreboard(screen=self.screen, game_manager=self)
                     self.scoreboard.menu.update(events)
                     self.scoreboard.update()
                     self.scoreboard.draw(self.screen)
@@ -74,11 +81,6 @@ class GameManager:
                     self.game.draw_ground(self.screen)
                     self.optionsMenu.menu.update(events)
                     self.optionsMenu.draw(self.screen)
-                case Levels.NOPIPE:
-                    self.game.update(self.dt)
-                    self.game.draw(self.screen)
-                    pygame.display.flip()
-                    
             pygame.display.flip()
             self.dt = self.clock.tick(GameConfig.REFRESH_RATE) / 1000
         pygame.quit()
@@ -91,15 +93,22 @@ class GameManager:
     def set_username(self, username):
         self.username = username
 
+    def get_username(self):
+        return self.username
+
+    def set_difficulty(self, difficulty):
+        self.difficulty = difficulty
+
+    def get_difficulty(self):
+        return self.difficulty
+
     def set_pipes_active(self, pipes_active):
         self.pipes_active = pipes_active
 
     def get_pipes_active(self):
         return self.pipes_active
 
-    def get_username(self):
-        return self.username
-
     def record_score(self, score):
         self.scoreboard.record_score(self.username, score)
+        self.scoreboard = Scoreboard(screen=self.screen, game_manager=self)
         self.set_level(Levels.SCOREBOARD)
