@@ -1,3 +1,4 @@
+import pygame
 import random
 from collections import deque
 
@@ -10,10 +11,13 @@ from src.GameConfig import GameConfig
 from src.Levels import Levels
 from src.PipeTypes import PipeTypes
 from src.util import load_image
-import pygame
+
 
 class Game:
     def __init__(self, screen:pygame.Surface, game_manager:GameManager):
+        self.scroll_speed = GameConfig.INITIAL_SCROLL_SPEED
+        self.max_scroll_speed = GameConfig.INITIAL_SCROLL_SPEED
+        self.paused = False
         self.score = 0
         self.bird = Bird(screen)
         self.scroll = 0
@@ -23,20 +27,18 @@ class Game:
         self.pipes = pygame.sprite.Group()
         self.pipes_pool = deque()
         self.add_pipes()
-        self.scroll_speed = GameConfig.INITIAL_SCROLL_SPEED
-        self.max_scroll_speed = GameConfig.INITIAL_SCROLL_SPEED
+
         self.bg_img = pygame.transform.scale(pygame.image.load('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.bg_img, _ = load_image('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
         self.ground_img, _ = load_image('assets/ground.png')
         self.group = pygame.sprite.RenderPlain((self.bird))
         self.game_manager = game_manager
-        self.font = pygame.font.SysFont('Segoe', 26)
+        self.score_font = pygame.font.SysFont('Segoe', 26)
 
     def add_pipes(self, initial_count=GameConfig.PIPES_BUFFER):
         for _ in range(initial_count):
             self.pipes_pool.append(Pipe(self.screen, 0, 0, PipeTypes.UP))
             self.pipes_pool.append(Pipe(self.screen, 0, 0, PipeTypes.DOWN))
-
 
     def click(self):
        pass
@@ -46,7 +48,7 @@ class Game:
         self.calculate_difficulty_values()
 
     def draw_score(self):
-        score_text = self.font.render(f"Score: {self.score}", True, (255, 255, 255))  # White text
+        score_text = self.score_font.render(f"Score: {self.score}", True, (255, 255, 255))  # White text
         self.screen.blit(score_text, (10, 10))
 
     def draw_ground(self,screen:pygame.Surface):
@@ -60,12 +62,13 @@ class Game:
 
     def update_bg(self):
         self.scroll += self.max_scroll_speed
-        if abs(self.scroll) > 450:
+        if abs(self.scroll) > 450 or self.bird.first_jump:
             self.scroll = 0
 
     def update(self, dt):
         pipes_active = self.game_manager.get_pipes_active()
         if InputManager.echap_pressed:
+            self.paused = True
             self.game_manager.set_level(Levels.PAUSE_MENU)
             self.bird.reset_velocity()
             difficulty = self.game_manager.get_difficulty()
@@ -78,7 +81,7 @@ class Game:
         else:
             self.scroll_speed = self.max_scroll_speed
         self.update_bg()
-        if not self.bird.first_jump and pipes_active:
+        if not self.bird.first_jump and pipes_active and not self.paused:
             self.pipes.update(self.max_scroll_speed)
             self.group.update(dt)
             for pipe in self.pipes:
@@ -138,6 +141,9 @@ class Game:
         self.difficulty_coefficient = 0
         self.game_manager.record_score(self.score)
         self.game_manager.set_level(Levels.SCOREBOARD)
+
+    def set_paused(self, paused):
+        self.paused = paused
 
 
 

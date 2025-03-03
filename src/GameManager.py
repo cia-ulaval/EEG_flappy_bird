@@ -15,21 +15,19 @@ from src.Scoreboard import Scoreboard
 from src.InputManager import InputManager
 from src.Difficulty import Difficulty
 
-
 def get_difficulty_from_value(value):
     return next((diff for diff in Difficulty if diff.value == value), None)
-
 
 class GameManager:
     def __init__(self):
         pygame.init()
+        self.difficulty = Difficulty.FACILE.value
+        self.current_level = GameConfig.DEFAULT_LEVEL
         self.username = "user" + str(random.randint(1000, 9999))
+        self.scroll = 0
         self.dt = 0
         self.running = True
         self.pipes_active = True
-        self.difficulty = Difficulty.FACILE.value
-        self.current_level = GameConfig.DEFAULT_LEVEL
-        self.scroll = 0
         self.bg_img = pygame.transform.scale(pygame.image.load('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.icon_img = pygame.image.load('assets/ico.png')
         self.ground_img = pygame.image.load('assets/ground.png')
@@ -73,11 +71,11 @@ class GameManager:
                     self.main_menu.menu.update(events)
                     self.main_menu.draw(self.screen)
                 case Levels.PAUSE_MENU:
-                    self.game.update_bg()
-                    self.game.draw_ground(self.screen)
                     self.pause_menu.menu.update(events)
                     self.pause_menu.update()
                     self.pause_menu.draw(self.screen)
+                    self.game.draw(self.screen)
+                    pygame.display.flip()
                 case Levels.SCOREBOARD:
                     self.game.update_bg()
                     self.game.draw_ground(self.screen)
@@ -96,6 +94,8 @@ class GameManager:
     def set_level(self, level:Levels, in_game:bool = False):
         if level == Levels.GAME and not in_game:
             self.game.__init__(game_manager=self, screen=self.screen)
+        elif level == Levels.GAME:
+            self.game.set_paused(False)
         self.current_level = level
 
     def set_username(self, username):

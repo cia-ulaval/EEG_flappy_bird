@@ -17,17 +17,17 @@ class PauseMenu:
         self.game_manager = game_manager
         self.theme = pm.themes.THEME_SOLARIZED.copy()
         self.bg_img = pygame.transform.scale(pygame.image.load('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
+        self.create_theme()
         self.menu = pm.Menu(width=GameConfig.SCREEN_DIMENSION[0] - 200,
                             height=GameConfig.SCREEN_DIMENSION[1] - 100,
                             theme=self.theme,
                             title="")
-
-        self.create_theme()
         self.create_menu()
         self.resize_components()
 
     def create_theme(self):
         self.theme.title_bar_style = pm.widgets.MENUBAR_STYLE_NONE
+        self.theme.background_color = pm.themes.TRANSPARENT_COLOR
 
     def resize_components(self):
         self.bg_img, _ = load_image('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
