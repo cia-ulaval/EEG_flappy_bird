@@ -20,19 +20,17 @@ class Scoreboard:
         self.GOLD = (191, 150, 37)
         self.SILVER = (138, 158, 163)
         self.BRONZE = (177, 89, 26)
-        self.WHITE = (255, 255, 255)
-        self.SCOREBOARD_FONT_TILE_SIZE = 40
-        self.SCOREBOARD_FONT_P_SIZE = 20
 
         self.theme = pm.themes.THEME_SOLARIZED.copy()
         self.bg_img = pygame.transform.scale(pygame.image.load('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.leaderboard = pygame.transform.scale(pygame.image.load('assets/bgScoreboard.png'),
                                                   GameConfig.SCREEN_DIMENSION)
+        self.create_theme()
         self.menu = pm.Menu(width=GameConfig.SCREEN_DIMENSION[0] - 200,
                             height=GameConfig.SCREEN_DIMENSION[1] - 100,
                             theme=self.theme,
                             title="")
-        self.create_theme()
+
         self.create_menu()
         self.resize_components()
         self.add_games_to_leaderboard()
@@ -40,7 +38,7 @@ class Scoreboard:
 
     def create_theme(self):
         self.theme.title_bar_style = pm.widgets.MENUBAR_STYLE_NONE
-        self.theme.background_color = (0, 0, 255, 0)
+        self.theme.background_color = pm.themes.TRANSPARENT_COLOR
 
     def resize_components(self):
         self.bg_img, _ = load_image('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
@@ -49,7 +47,7 @@ class Scoreboard:
 
     def create_menu(self):
         self.menu.set_relative_position(50, 55)
-        self.menu.add.label(title="Pointages\n\n", font_size=self.SCOREBOARD_FONT_TILE_SIZE, font_color=GameConfig.FONT_COLOR,
+        self.menu.add.label(title="Pointages\n\n", font_size=GameConfig.MENU_FONT_TILE_SIZE, font_color=GameConfig.FONT_COLOR_SECONDARY,
                             font_name=pygame_menu.font.FONT_8BIT)
 
     def add_games_to_leaderboard(self):
@@ -64,7 +62,7 @@ class Scoreboard:
                 title=f"{position:<{indent_index}} {name:^{indent_names}} {score:>4}",
                 font_color=[self.GOLD, self.SILVER, self.BRONZE, GameConfig.FONT_COLOR][min(index, 3)],
                 font_name=GameConfig.FONT,
-                font_size=self.SCOREBOARD_FONT_P_SIZE,
+                font_size=GameConfig.MENU_FONT_P_SIZE,
                 margin=(0, 15)
             )
             position += 1

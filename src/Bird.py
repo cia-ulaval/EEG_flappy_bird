@@ -5,21 +5,20 @@ from src.GameConfig import GameConfig
 class Bird(pygame.sprite.Sprite):
     def __init__(self, screen: pygame.Surface):
         pygame.sprite.Sprite.__init__(self)
+        self.JUMP_FORCE = 800
+        self.SPEED_BIRD_TILT = 40
         self.screen = screen
+        self.jump_timer = 0
+        self.velocity = pygame.Vector2(0, 0)
         self.bird_image, self.bird = load_image("assets/brainDefault.png", -1)
         self.bird_flap_image, self.bird_flap_rect = load_image("assets/brainFlap.png", -1)
         self.bird_mid_flap_image, self.bird_mid_flap_rect = load_image("assets/brainMidFlap.png", -1)
         self.bird.center = (screen.get_width() / 2,
                                   screen.get_height() / 2)
         self.first_jump = True
-
         self.image = self.bird_image
         self.rect = self.bird
         self.collision_rect = self.bird.inflate(-20, -20)
-        self.jump_timer = 0
-        self.velocity = pygame.Vector2(0, 0)
-        self.JUMP_FORCE = 800
-        self.SPEED_BIRD_TILT = 40
 
     def update(self, dt):
         self.gravity(dt)
