@@ -24,8 +24,6 @@ def format_difficulties():
 
 class OptionsMenu:
     def __init__(self, screen:pygame.Surface, game_manager: GameManager):
-        self.game_manager = game_manager
-
         self.screen = screen
         self.game_manager = game_manager
         self.theme = pm.themes.THEME_SOLARIZED.copy()
@@ -61,6 +59,10 @@ class OptionsMenu:
                                  font_color=GameConfig.FONT_COLOR,
                                  font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_pipes_active,
                                  default=True, background_color=None, border_width=0)
+        self.menu.add.toggle_switch(title="Invincibilite", font_size=GameConfig.MENU_FONT_P_SIZE,
+                                    font_color=GameConfig.FONT_COLOR,
+                                    font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_invincibility,
+                                    default=False, background_color=None, border_width=0)
         self.menu.add.range_slider(title="Son", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
                                    font_name=pygame_menu.font.FONT_8BIT, onchange=set_sound_level,
                                    range_values=[0, 100], default=50, background_color=None, border_width=0, increment=1)
@@ -77,8 +79,11 @@ class OptionsMenu:
     def set_username(self, username):
         self.game_manager.set_username(username)
 
-    def set_difficulty(self, value, difficulty):
+    def set_difficulty(self, difficulty):
         self.game_manager.set_difficulty(difficulty)
 
     def set_pipes_active(self, pipes_active):
         self.game_manager.set_pipes_active(pipes_active)
+
+    def set_invincibility(self, invincible):
+        self.game_manager.set_invincibility(invincible)
