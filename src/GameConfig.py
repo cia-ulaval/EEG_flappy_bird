@@ -9,11 +9,12 @@ class GameConfig:
     GROUND_SPACE = 50
     DEFAULT_LEVEL = Levels.MENU
     GRAVITY_FORCE = 3000
-    FONT = 'assets/policeFlappy.ttf'
-    FONT_COLOR = (0, 0, 0)
-    FLAP_ANIMATION_TIMING = 100
     MENU_FONT_TILE_SIZE = 40
     MENU_FONT_P_SIZE = 20
+    FONT = 'assets/policeFlappy.ttf'
+    FONT_COLOR = (255, 255, 255)
+    FONT_COLOR_SECONDARY = (0, 0, 0)
+    FLAP_ANIMATION_TIMING = 100
     PIPES_BUFFER = 15
     MAX_SCROLL_SPEED_AUGMENTATIONS = [0.75, 1, 4]
     SCROLL_SPEED_AUGMENTATIONS = [0.05, 0.1, 0.2]
