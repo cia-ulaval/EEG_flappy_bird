@@ -28,6 +28,7 @@ class GameManager:
         self.dt = 0
         self.running = True
         self.pipes_active = True
+        self.invincibility = False
         self.bg_img = pygame.transform.scale(pygame.image.load('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.icon_img = pygame.image.load('assets/ico.png')
         self.ground_img = pygame.image.load('assets/ground.png')
@@ -115,6 +116,12 @@ class GameManager:
 
     def get_pipes_active(self):
         return self.pipes_active
+
+    def set_invincibility(self, invincibility):
+        self.invincibility = invincibility
+
+    def get_invincibility(self):
+        return self.invincibility
 
     def record_score(self, score):
         self.scoreboard.record_score(self.username, score)

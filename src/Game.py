@@ -67,6 +67,7 @@ class Game:
 
     def update(self, dt):
         pipes_active = self.game_manager.get_pipes_active()
+        invincible = self.game_manager.get_invincibility()
         if InputManager.echap_pressed:
             self.paused = True
             self.game_manager.set_level(Levels.PAUSE_MENU)
@@ -76,7 +77,7 @@ class Game:
                 self.bird.reset_first_jump()
         if InputManager.is_jump_down():
             self.bird.jump(dt)
-        if any(pipe.rect.colliderect(self.bird.collision_rect) for pipe in self.pipes) | self.bird.crashed():
+        if (not invincible) and any(pipe.rect.colliderect(self.bird.collision_rect) for pipe in self.pipes) | self.bird.crashed():
             self.game_over()
         else:
             self.scroll_speed = self.max_scroll_speed
