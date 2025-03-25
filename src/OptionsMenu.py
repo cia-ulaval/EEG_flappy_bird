@@ -79,7 +79,7 @@ class OptionsMenu:
     def set_username(self, username):
         self.game_manager.set_username(username)
 
-    def set_difficulty(self, difficulty):
+    def set_difficulty(self, selected, difficulty):
         self.game_manager.set_difficulty(difficulty)
 
     def set_pipes_active(self, pipes_active):
