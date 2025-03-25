@@ -4,7 +4,7 @@ import pygame_menu.font
 
 from src import GameManager
 from src.Difficulty import Difficulty
-from src.util import load_image
+from src.util import load_image, get_menu_theme
 from src.GameConfig import GameConfig
 from src.Levels import Levels
 
@@ -38,15 +38,14 @@ class OptionsMenu:
         self.resize_components()
 
     def create_theme(self):
-        self.theme.title_bar_style = pm.widgets.MENUBAR_STYLE_NONE
-        self.theme.background_color = pm.themes.TRANSPARENT_COLOR
+        self.theme = get_menu_theme()
 
     def resize_components(self):
         self.bg_img, _ = load_image('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
 
     def create_menu(self):
         self.menu.set_relative_position(50, 55)
-        self.menu.add.label(title="Options\n\n", font_size=GameConfig.MENU_FONT_TILE_SIZE, font_color=GameConfig.FONT_COLOR,
+        self.menu.add.label(title="Options\n", font_size=GameConfig.MENU_FONT_TILE_SIZE, font_color=GameConfig.FONT_COLOR,
                             font_name=pygame_menu.font.FONT_8BIT)
         self.menu.add.text_input(title="Nom   ", textinput_id="user_input", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
                                 font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_username,
@@ -70,7 +69,9 @@ class OptionsMenu:
                              font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.MENU), background_color=None, border_width=0)
 
     def draw(self, screen):
-        screen.blit(self.bg_img, (0, 0))
+        overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 64))
+        screen.blit(overlay, (0, 0))
         self.menu.draw(screen)
 
     def set_level(self, level):
