@@ -7,7 +7,7 @@ from math import log10
 
 import pygame_menu.font
 from src.InputManager import InputManager
-from src.util import load_image
+from src.util import load_image, get_menu_theme
 from src.GameConfig import GameConfig
 from src import GameManager
 from src.Levels import Levels
@@ -37,8 +37,7 @@ class Scoreboard:
         self.add_return_button()
 
     def create_theme(self):
-        self.theme.title_bar_style = pm.widgets.MENUBAR_STYLE_NONE
-        self.theme.background_color = pm.themes.TRANSPARENT_COLOR
+        self.theme = get_menu_theme()
 
     def resize_components(self):
         self.bg_img, _ = load_image('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
@@ -79,7 +78,9 @@ class Scoreboard:
                                     background_color=None, border_width=0)
 
     def draw(self, screen):
-        screen.blit(self.bg_img, (0, 0))
+        overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 64))
+        screen.blit(overlay, (0, 0))
 
         self.draw_scoreboard(screen)
         self.menu.draw(screen)

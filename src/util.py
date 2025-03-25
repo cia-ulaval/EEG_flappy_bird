@@ -1,4 +1,6 @@
 import os
+import pygame_menu as pm
+import pygame_menu.font
 from src.GameConfig import GameConfig
 import pygame
 
@@ -68,3 +70,16 @@ def rotate_around_center(image, angle, x, y):
     rotated_image = pygame.transform.rotate(image, angle)
     new_rect = rotated_image.get_rect(center=image.get_rect(center=(x,y)).center)
     return rotated_image, new_rect
+
+def get_menu_theme():
+    theme = pm.themes.THEME_DARK.copy()
+    theme.title_bar_style = pm.widgets.MENUBAR_STYLE_NONE
+    theme.background_color = pm.themes.TRANSPARENT_COLOR
+
+    theme.widget_font = pygame_menu.font.FONT_8BIT
+    theme.widget_font_color = (255, 255, 255)
+    theme.widget_font_size = 30
+
+    theme.selection_color = (200, 100, 80)
+    theme.widget_margin = (0, 20)
+    return theme
