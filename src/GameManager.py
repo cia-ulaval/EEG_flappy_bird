@@ -72,10 +72,11 @@ class GameManager:
                     self.main_menu.menu.update(events)
                     self.main_menu.draw(self.screen)
                 case Levels.PAUSE_MENU:
+                    self.game.update(self.dt)
+                    self.game.draw(self.screen)
                     self.pause_menu.menu.update(events)
                     self.pause_menu.update()
                     self.pause_menu.draw(self.screen)
-                    self.game.draw(self.screen)
                     pygame.display.flip()
                 case Levels.SCOREBOARD:
                     self.game.update_bg()
