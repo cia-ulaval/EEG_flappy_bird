@@ -11,7 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout source repository
+      uses: actions/checkout@v3
+      with:
+        path: source
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -22,26 +25,32 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pygbag
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f source/requirements.txt ]; then pip install -r source/requirements.txt; fi
 
     - name: Build with Pygbag
+      working-directory: source
       run: |
         python -m pygbag --build --ume_block 0 main.py
 
-    - name: Checkout
+    - name: Checkout target repository
       uses: actions/checkout@v3
       with:
         repository: VillyGH/WBL-WebApp
         token: ${{ secrets.WEBAPP_PUSH_TOKEN }}
         path: webapp
+        fetch-depth: 0
+
+    - name: Copy build files to target repository
+      run: |
+        mkdir -p webapp/flapeeg
+        cp -r source/build/web/* webapp/flapeeg/
 
     - name: Commit and Push to WBL-WebApp Repository
+      working-directory: webapp
       run: |
-        git checkout -b flapeeg-game-build
-        cd build
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git remote set-url origin https://x-access-token:${{ secrets.WEBAPP_PUSH_TOKEN }}@github.com/VillyGH/WBL-WebApp.git
-        git add .
-        git commit -m "Update game assets from Pygame project" || echo "No changes to commit"
-        git push origin flapeeg-game-build
+        git checkout -b flapeeg-game-build
+        git add flapeeg/
+        git commit -m "Update game assets from Flapeeg Pygame project" || echo "No changes to commit"
+        git push -f origin flapeeg-game-build
