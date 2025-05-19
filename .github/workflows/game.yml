@@ -38,35 +38,48 @@ jobs:
         mkdir -p /tmp/flapeeg-build
         cp -r build/web/* /tmp/flapeeg-build/
 
-    - name: Checkout target repository
-      uses: actions/checkout@v3
-      with:
-        repository: VillyGH/WBL-WebApp
-        token: ${{ secrets.WEBAPP_PUSH_TOKEN }}
-        path: webapp
-        fetch-depth: 0
-
-    - name: Set up target branch and copy files
-      working-directory: webapp
+    - name: Configure GitHub CLI
       run: |
+        echo "${{ secrets.WEBAPP_PUSH_TOKEN }}" > gh_token.txt
+        gh auth login --with-token < gh_token.txt
+        rm gh_token.txt
+
+    - name: Clone target repository, create branch and commit changes
+      run: |
+        # Clone the target repository
+        git clone https://x-access-token:${{ secrets.WEBAPP_PUSH_TOKEN }}@github.com/VillyGH/WBL-WebApp.git target-repo
+        cd target-repo
+        
+        # Configure Git
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git checkout -b flapeeg-game-update-$(date +%Y%m%d%H%M%S)
+        
+        # Create a unique branch name
+        BRANCH_NAME="flapeeg-game-update-$(date +%Y%m%d%H%M%S)"
+        git checkout -b $BRANCH_NAME
+        
+        # Ensure the flapeeg directory exists
         mkdir -p flapeeg
+        
+        # Copy built files
         cp -r /tmp/flapeeg-build/* flapeeg/
-        git add flapeeg/
-        git commit -m "Update Flapeeg game assets" || echo "No changes to commit"
-
-    - name: Create Pull Request
-      env:
-        GH_TOKEN: ${{ secrets.WEBAPP_PUSH_TOKEN }}
-      working-directory: webapp
-      run: |
-        BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
-        git push -u origin $BRANCH_NAME
-        gh pr create \
-          --title "Update Flapeeg game assets" \
-          --body "This PR updates the Flapeeg game assets with the latest build from the main repository." \
-          --base main \
-          --head $BRANCH_NAME \
-          --repo VillyGH/WBL-WebApp
+        
+        # Check if there are changes
+        if git status --porcelain | grep -q "flapeeg/"; then
+          # Add and commit the changes
+          git add flapeeg/
+          git commit -m "Update Flapeeg game assets"
+          
+          # Push the branch
+          git push origin $BRANCH_NAME
+          
+          # Create a pull request
+          gh pr create \
+            --title "Update Flapeeg game assets" \
+            --body "This PR updates the Flapeeg game assets with the latest build from the main repository." \
+            --base main \
+            --head $BRANCH_NAME \
+            --repo VillyGH/WBL-WebApp
+        else
+          echo "No changes to commit. Skipping PR creation."
+        fi
