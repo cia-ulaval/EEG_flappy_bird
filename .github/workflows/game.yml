@@ -37,10 +37,11 @@ jobs:
 
     - name: Commit and Push to WBL-WebApp Repository
       run: |
+        git checkout -b flapeeg-game-build
         cd build
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git remote set-url origin https://x-access-token:${{ secrets.WEBAPP_PUSH_TOKEN }}@github.com/cia-ulaval/EEG_flappy_bird.git
         git add .
         git commit -m "Update game assets from Pygame project" || echo "No changes to commit"
-        git push origin HEAD:master
+        git push origin flapeeg-game-build
