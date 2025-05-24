@@ -76,13 +76,14 @@ jobs:
                      --head "$BRANCH" \
                      --title "Update flapeeg web build" \
                      --body "This pull request updates the flapeeg web build from EEG_flappy_bird."
+        ls -R source/build/win
 
     - name: Create GitHub Release and Upload Windows Executable
       uses: softprops/action-gh-release@v1
       with:
         tag_name: flapeeg-build-${{ github.run_number }}
         name: "Flapeeg Build ${{ github.run_number }}"
-        files: flapeeg/main.exe
+        files: source/build/win/main.exe
         body: "🚀 Automatically built Windows executable for flapeeg"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
