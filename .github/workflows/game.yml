@@ -35,7 +35,6 @@ jobs:
     - name: Build Windows executable with PyInstaller
       working-directory: source
       run: |
-        mkdir -p build/win
         pyinstaller --noconsole --onefile \
           --add-data="assets:assets" \
           --add-data="data:data" \
@@ -54,7 +53,7 @@ jobs:
       run: |
         mkdir -p webapp/flapeeg
         cp -r source/build/web/* webapp/flapeeg/
-        cp -r source/build/win/main.exe webapp/flapeeg/main.exe
+        cp source/build/win/main.exe webapp/flapeeg/main.exe
 
     - name: Push web build to new branch and create Pull Request
       working-directory: webapp
