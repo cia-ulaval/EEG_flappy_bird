@@ -25,7 +25,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pygbag pyinstaller
-        if [ -f source/requirements.txt ]; then pip install -r source/requirements.txt; fi
+        pip install -r source/requirements.txt
 
     - name: Build web version with Pygbag
       working-directory: source
