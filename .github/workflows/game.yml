@@ -1,4 +1,4 @@
-name: Build and Deploy with Pygbag
+name: Build and Deploy Game
 
 on:
   push:
@@ -7,11 +7,11 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout source repository
+    - name: Checkout source repository (EEG_flappy_bird)
       uses: actions/checkout@v3
       with:
         path: source
@@ -24,15 +24,25 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pygbag
+        pip install pygbag pyinstaller
         if [ -f source/requirements.txt ]; then pip install -r source/requirements.txt; fi
 
-    - name: Build with Pygbag
+    - name: Build web version with Pygbag
       working-directory: source
       run: |
         python -m pygbag --build --ume_block 0 main.py
 
-    - name: Checkout target repository
+    - name: Build Windows executable with PyInstaller
+      working-directory: source
+      run: |
+        mkdir -p build/win
+        pyinstaller --noconsole --onefile \
+          --add-data "assets;assets" \
+          --add-data "data;data" \
+          --distpath "build/win" \
+          main.py
+
+    - name: Checkout target repository (WBL-WebApp)
       uses: actions/checkout@v3
       with:
         repository: VillyGH/WBL-WebApp
@@ -40,26 +50,45 @@ jobs:
         path: webapp
         fetch-depth: 0
 
-    - name: Copy build files to target repository
+    - name: Copy web build to target repository
       run: |
         mkdir -p webapp/flapeeg
         cp -r source/build/web/* webapp/flapeeg/
 
-    - name: Add files and git config
+    - name: Push web build to target repository
       working-directory: webapp
       run: |
+        BRANCH_NAME="flapeeg-game-build-$(date +%s)"
+        git checkout -b $BRANCH_NAME
+
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git checkout -b flapeeg-game-build
+
+        git add flapeeg/
+        git commit -m "Update flapeeg web build from EEG_flappy_bird"
+        
+        git remote set-url origin https://x-access-token:${{ secrets.WEBAPP_PUSH_TOKEN }}@github.com/VillyGH/WBL-WebApp.git
+        git push origin $BRANCH_NAME
+
+        echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v6
       with:
         token: ${{ secrets.WEBAPP_PUSH_TOKEN }}
-        commit-message: Update game assets from Flapeeg Pygame project
-        author: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
-        signoff: false
-        branch: example-patches
-        delete-branch: true
-        base: master
-        title: "Update assets from flapeeg"
+        repository: VillyGH/WBL-WebApp
+        head: ${{ env.BRANCH_NAME }}
+        base: main
+        title: "Update flapeeg web build"
+        body: |
+          This pull request updates the web build from the EEG_flappy_bird repository.
+
+    - name: Create GitHub Release and Upload Windows Executable
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: flapeeg-build-${{ github.run_number }}
+        name: "Flapeeg Build ${{ github.run_number }}"
+        files: source/build/win/main.exe
+        body: "🚀 Automatically built Windows executable for FLAPEEG game."
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
