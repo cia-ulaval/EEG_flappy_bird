@@ -53,7 +53,7 @@ jobs:
     - name: Copy web build to target repository
       run: |
         mkdir -p webapp/flapeeg
-        cp -r source/build/web/* webapp/flapeeg/
+        cp -r source/build/{web,win}/* webapp/flapeeg/
 
     - name: Push web build to new branch and create Pull Request
       working-directory: webapp
