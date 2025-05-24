@@ -51,6 +51,7 @@ jobs:
 
     - name: Copy web build to target repository
       run: |
+        ls source/build/win
         mkdir -p webapp/flapeeg
         cp -r source/build/web/* webapp/flapeeg/
         cp source/build/win/main.exe webapp/flapeeg/main.exe
