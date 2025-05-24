@@ -35,12 +35,7 @@ jobs:
     - name: Build Windows executable with PyInstaller
       working-directory: source
       run: |
-        pyinstaller --noconsole --onefile ^
-          --add-data "assets;assets" ^
-          --add-data "data;data" ^
-          --distpath "build\win" ^
-          --name flapeeg ^
-          main.py
+        pyinstaller --noconsole --onefile --add-data "assets;assets" --add-data "data;data" --distpath "build\\win" --name flapeeg main.py
 
     - name: Checkout target repository (WBL-WebApp)
       uses: actions/checkout@v3
