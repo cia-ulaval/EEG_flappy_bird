@@ -53,7 +53,8 @@ jobs:
     - name: Copy web build to target repository
       run: |
         mkdir -p webapp/flapeeg
-        cp -r source/build/{web,win}/* webapp/flapeeg/
+        cp -r source/build/web/* webapp/flapeeg/
+        cp -r source/build/win/main.exe webapp/flapeeg/main.exe
 
     - name: Push web build to new branch and create Pull Request
       working-directory: webapp
@@ -76,14 +77,13 @@ jobs:
                      --head "$BRANCH" \
                      --title "Update flapeeg web build" \
                      --body "This pull request updates the flapeeg web build from EEG_flappy_bird."
-        ls
 
     - name: Create GitHub Release and Upload Windows Executable
       uses: softprops/action-gh-release@v1
       with:
         tag_name: flapeeg-build-${{ github.run_number }}
         name: "Flapeeg Build ${{ github.run_number }}"
-        files: source/build/win/main.exe
+        files: flapeeg/main
         body: "🚀 Automatically built Windows executable for flapeeg"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
