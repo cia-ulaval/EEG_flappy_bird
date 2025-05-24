@@ -39,6 +39,7 @@ jobs:
           --add-data="assets:assets" \
           --add-data="data:data" \
           --distpath "build/win" \
+          --name flapeeg \
           main.py
 
     - name: Checkout target repository (WBL-WebApp)
@@ -51,10 +52,9 @@ jobs:
 
     - name: Copy web build to target repository
       run: |
-        ls source/build/win
         mkdir -p webapp/flapeeg
         cp -r source/build/web/* webapp/flapeeg/
-        cp source/build/win/main.exe webapp/flapeeg/main.exe
+        cp source/build/win/* webapp/flapeeg/
 
     - name: Push web build to new branch and create Pull Request
       working-directory: webapp
@@ -83,7 +83,7 @@ jobs:
       with:
         tag_name: flapeeg-build-${{ github.run_number }}
         name: "Flapeeg Build ${{ github.run_number }}"
-        files: flapeeg/main.exe
+        files: flapeeg/flapeeg.exe
         body: "🚀 Automatically built Windows executable for flapeeg"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
