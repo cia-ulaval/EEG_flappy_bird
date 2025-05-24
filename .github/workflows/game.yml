@@ -83,7 +83,7 @@ jobs:
       with:
         tag_name: flapeeg-build-${{ github.run_number }}
         name: "Flapeeg Build ${{ github.run_number }}"
-        files: flapeeg/main
+        files: flapeeg/main.exe
         body: "🚀 Automatically built Windows executable for flapeeg"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
