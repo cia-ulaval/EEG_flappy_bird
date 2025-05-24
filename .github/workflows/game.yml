@@ -52,6 +52,7 @@ jobs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git checkout -b flapeeg-game-build
         git add flapeeg/
+        git pull
         git push --set-upstream origin flapeeg-game-build
 
     - name: Create Pull Request
