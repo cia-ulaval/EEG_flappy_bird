@@ -56,7 +56,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.WEBAPP_PUSH_TOKEN }}
       run: |
-        BRANCH="flapeeg-game-build-$(date +%s)"
+        BRANCH="flapeeg-game-build-${{ github.run_number }}"
         git checkout -b $BRANCH
 
         git config user.name "github-actions[bot]"
