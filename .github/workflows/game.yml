@@ -55,33 +55,34 @@ jobs:
         mkdir -p webapp/flapeeg
         cp -r source/build/web/* webapp/flapeeg/
 
-    - name: Push web build to target repository
+    - name: Push web build to new branch and create Pull Request
       working-directory: webapp
+      env:
+        GH_TOKEN: ${{ secrets.WEBAPP_PUSH_TOKEN }}
       run: |
-        BRANCH_NAME="flapeeg-game-build-$(date +%s)"
-        git checkout -b $BRANCH_NAME
+        BRANCH="flapeeg-game-build-$(date +%s)"
+        git checkout -b $BRANCH
 
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
         git add flapeeg/
         git commit -m "Update flapeeg web build from EEG_flappy_bird"
-        
+
         git remote set-url origin https://x-access-token:${{ secrets.WEBAPP_PUSH_TOKEN }}@github.com/VillyGH/WBL-WebApp.git
-        git push origin $BRANCH_NAME
+        git push origin $BRANCH
 
-        echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+        # Install GitHub CLI
+        sudo apt-get install -y gh
 
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v6
-      with:
-        token: ${{ secrets.WEBAPP_PUSH_TOKEN }}
-        repository: VillyGH/WBL-WebApp
-        head: ${{ env.BRANCH_NAME }}
-        base: main
-        title: "Update flapeeg web build"
-        body: |
-          This pull request updates the web build from the EEG_flappy_bird repository.
+        # Authenticate CLI
+        echo "${{ secrets.WEBAPP_PUSH_TOKEN }}" | gh auth login --with-token
+
+        # Create PR
+        gh pr create --base main \
+                     --head "$BRANCH" \
+                     --title "Update flapeeg web build" \
+                     --body "This pull request updates the flapeeg web build from EEG_flappy_bird."
 
     - name: Create GitHub Release and Upload Windows Executable
       uses: softprops/action-gh-release@v1
@@ -89,6 +90,6 @@ jobs:
         tag_name: flapeeg-build-${{ github.run_number }}
         name: "Flapeeg Build ${{ github.run_number }}"
         files: source/build/win/main.exe
-        body: "🚀 Automatically built Windows executable for FLAPEEG game."
+        body: "🚀 Automatically built Windows executable for flapeeg"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
