@@ -1,4 +1,5 @@
 import random
+import asyncio
 
 import pygame
 import pygame.gfxdraw
@@ -48,11 +49,11 @@ class GameManager:
         pygame.init()
         pygame.display.set_caption(GameConfig.WINDOW_NAME)
 
-    def start_application(self):
+    async def start_application(self):
         print('Application Flappy_EEG starting...')
-        self.game_loop()
+        await self.game_loop()
 
-    def game_loop(self):
+    async def game_loop(self):
         while self.running:
             InputManager.refresh_inputs()
             events = pygame.event.get()
@@ -92,6 +93,7 @@ class GameManager:
                     self.options_menu.draw(self.screen)
             pygame.display.flip()
             self.dt = self.clock.tick(GameConfig.REFRESH_RATE) / 1000
+            await asyncio.sleep(0)
         pygame.quit()
 
     def set_level(self, level:Levels, in_game:bool = False):
