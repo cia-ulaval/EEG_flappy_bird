@@ -49,8 +49,9 @@ jobs:
         fetch-depth: 0
 
     - name: Copy web build to target repository
+      shell: bash
       run: |
-        if not exist "webapp/public/flapeeg" mkdir webapp/public/flapeeg
+        mkdir -p webapp/public/flapeeg
         cp -r source/build/web/* webapp/public/flapeeg/
         cp source/build/win/* webapp/public/flapeeg/
 
