@@ -50,7 +50,7 @@ jobs:
 
     - name: Copy web build to target repository
       run: |
-        mkdir -p webapp/public/flapeeg
+        if not exist "webapp/public/flapeeg" mkdir webapp/public/flapeeg
         cp -r source/build/web/* webapp/public/flapeeg/
         cp source/build/win/* webapp/public/flapeeg/
 
