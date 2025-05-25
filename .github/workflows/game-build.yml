@@ -39,7 +39,6 @@ jobs:
       working-directory: source
       run: |
         pyinstaller --noconsole --onefile --add-data "assets;assets" --add-data "data;data" --distpath "build\\win" --name flapeeg main.py
-        zip -d flapeeg.zip build/web/
 
     - name: Checkout target repository (WBL-WebApp)
       uses: actions/checkout@v3
@@ -54,7 +53,8 @@ jobs:
       run: |
         mkdir -p webapp/public/flapeeg
         cp -r source/build/web/* webapp/public/flapeeg/
-        cp source/build/win/flapeeg.zip webapp/public/flapeeg/flapeeg.zip
+        zip -d flapeeg.zip source/build/win/
+        cp flapeeg.zip webapp/public/flapeeg/flapeeg.zip
 
     - name: Push web build to new branch and create Pull Request
       working-directory: webapp
