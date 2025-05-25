@@ -39,9 +39,6 @@ jobs:
       working-directory: source
       run: |
         pyinstaller --noconsole --onefile --add-data "assets;assets" --add-data "data;data" --distpath "build\\win" --name flapeeg main.py
-        cp -r assets build/win/
-        mkdir -p build/web/data
-        touch build/web/data/scores.json
         zip -d flapeeg.zip build/web/
 
     - name: Checkout target repository (WBL-WebApp)
