@@ -1,16 +1,20 @@
 import math
-
+import sys
+import os
 import pygame_menu as pm
 import json
 import pygame
-from math import log10
-
 import pygame_menu.font
 from src.InputManager import InputManager
 from src.util import load_image, get_menu_theme
 from src.GameConfig import GameConfig
 from src import GameManager
 from src.Levels import Levels
+
+def resource_path(relative_path):
+    """Retourne le chemin absolu vers la ressource, compatible PyInstaller."""
+    base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
+    return os.path.join(base_path, relative_path)
 
 class Scoreboard:
     def __init__(self, screen:pygame.Surface, game_manager: GameManager):
@@ -101,6 +105,6 @@ class Scoreboard:
             self.write_new_scores()
 
     def write_new_scores(self):
-        with open("data/scores.json", 'w+') as file:
+        with open(resource_path("data/scores.json"), 'w+') as file:
             file.seek(0)
             json.dump(self.data, file, indent=4)

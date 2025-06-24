@@ -1,3 +1,9 @@
+# /// script
+# dependencies = [
+#  "pygame_menu"
+# ]
+# ///
+
 import asyncio
 from src.GameManager import GameManager
 
