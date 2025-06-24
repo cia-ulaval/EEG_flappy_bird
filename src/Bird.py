@@ -1,5 +1,5 @@
 import pygame
-from src.util import load_image, rotate_around_center
+from src.util import load_image_rect, rotate_around_center
 from src.GameConfig import GameConfig
 
 class Bird(pygame.sprite.Sprite):
@@ -10,9 +10,9 @@ class Bird(pygame.sprite.Sprite):
         self.screen = screen
         self.jump_timer = 0
         self.velocity = pygame.Vector2(0, 0)
-        self.bird_image, self.bird = load_image("assets/brainDefault.png", -1)
-        self.bird_flap_image, self.bird_flap_rect = load_image("assets/brainFlap.png", -1)
-        self.bird_mid_flap_image, self.bird_mid_flap_rect = load_image("assets/brainMidFlap.png", -1)
+        self.bird_image, self.bird = load_image_rect("assets/brainDefault.png", -1)
+        self.bird_flap_image, self.bird_flap_rect = load_image_rect("assets/brainFlap.png", -1)
+        self.bird_mid_flap_image, self.bird_mid_flap_rect = load_image_rect("assets/brainMidFlap.png", -1)
         self.bird.center = (screen.get_width() / 2,
                                   screen.get_height() / 2)
         self.first_jump = True

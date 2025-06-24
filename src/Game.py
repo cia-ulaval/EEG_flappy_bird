@@ -10,7 +10,7 @@ from src.InputManager import InputManager
 from src.GameConfig import GameConfig
 from src.Levels import Levels
 from src.PipeTypes import PipeTypes
-from src.util import load_image
+from src.util import load_image_rect, load_image
 
 
 class Game:
@@ -28,9 +28,9 @@ class Game:
         self.pipes_pool = deque()
         self.add_pipes()
 
-        self.bg_img = pygame.transform.scale(pygame.image.load('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
-        self.bg_img, _ = load_image('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
-        self.ground_img, _ = load_image('assets/ground.png')
+        self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
+        self.bg_img, _ = load_image_rect('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
+        self.ground_img, _ = load_image_rect('assets/ground.png')
         self.group = pygame.sprite.RenderPlain((self.bird))
         self.game_manager = game_manager
         self.score_font = pygame.font.SysFont('Segoe', 26)

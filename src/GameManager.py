@@ -15,6 +15,8 @@ from src.PauseMenu import PauseMenu
 from src.Scoreboard import Scoreboard
 from src.InputManager import InputManager
 from src.Difficulty import Difficulty
+from src.util import load_image
+
 
 def get_difficulty_from_value(value):
     return next((diff for diff in Difficulty if diff.value == value), None)
@@ -30,9 +32,9 @@ class GameManager:
         self.running = True
         self.pipes_active = True
         self.invincibility = False
-        self.bg_img = pygame.transform.scale(pygame.image.load('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
-        self.icon_img = pygame.image.load('assets/ico.png')
-        self.ground_img = pygame.image.load('assets/ground.png')
+        self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
+        self.icon_img = load_image('assets/ico.png')
+        self.ground_img = load_image('assets/ground.png')
         self.screen = pygame.display.set_mode(
             Vector2(GameConfig.SCREEN_DIMENSION.x, GameConfig.SCREEN_DIMENSION.y + GameConfig.GROUND_SPACE))
         self.clock = pygame.time.Clock()

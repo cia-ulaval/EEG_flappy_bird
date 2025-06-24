@@ -1,20 +1,16 @@
 import math
-import sys
-import os
+
 import pygame_menu as pm
 import json
 import pygame
 import pygame_menu.font
 from src.InputManager import InputManager
-from src.util import load_image, get_menu_theme
+from src.util import load_image_rect, get_menu_theme, load_image, resource_path
 from src.GameConfig import GameConfig
 from src import GameManager
 from src.Levels import Levels
 
-def resource_path(relative_path):
-    """Retourne le chemin absolu vers la ressource, compatible PyInstaller."""
-    base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
-    return os.path.join(base_path, relative_path)
+
 
 class Scoreboard:
     def __init__(self, screen:pygame.Surface, game_manager: GameManager):
@@ -26,8 +22,8 @@ class Scoreboard:
         self.BRONZE = (177, 89, 26)
 
         self.theme = pm.themes.THEME_SOLARIZED.copy()
-        self.bg_img = pygame.transform.scale(pygame.image.load('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
-        self.leaderboard = pygame.transform.scale(pygame.image.load('assets/bgScoreboard.png'),
+        self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
+        self.leaderboard = pygame.transform.scale(load_image('assets/bgScoreboard.png'),
                                                   GameConfig.SCREEN_DIMENSION)
         self.create_theme()
         self.menu = pm.Menu(width=GameConfig.SCREEN_DIMENSION[0] - 200,
@@ -44,9 +40,9 @@ class Scoreboard:
         self.theme = get_menu_theme()
 
     def resize_components(self):
-        self.bg_img, _ = load_image('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
-        self.leaderboard, _ = load_image('assets/bgScoreboard.png',
-                                         resize=(GameConfig.SCREEN_DIMENSION[0] - 200, GameConfig.SCREEN_DIMENSION[1] - 50))
+        self.bg_img, _ = load_image_rect('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
+        self.leaderboard, _ = load_image_rect('assets/bgScoreboard.png',
+                                              resize=(GameConfig.SCREEN_DIMENSION[0] - 200, GameConfig.SCREEN_DIMENSION[1] - 50))
 
     def create_menu(self):
         self.menu.set_relative_position(50, 55)

@@ -4,7 +4,7 @@ import pygame_menu.font
 
 from src import GameManager
 from src.InputManager import InputManager
-from src.util import load_image, get_menu_theme
+from src.util import load_image_rect, get_menu_theme, load_image
 from src.GameConfig import GameConfig
 from src.Levels import Levels
 
@@ -16,7 +16,7 @@ class PauseMenu:
         self.screen = screen
         self.game_manager = game_manager
         self.theme = pm.themes.THEME_SOLARIZED.copy()
-        self.bg_img = pygame.transform.scale(pygame.image.load('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
+        self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.create_theme()
         self.menu = pm.Menu(width=GameConfig.SCREEN_DIMENSION[0] - 200,
                             height=GameConfig.SCREEN_DIMENSION[1] - 100,
@@ -29,7 +29,7 @@ class PauseMenu:
         self.theme = get_menu_theme()
 
     def resize_components(self):
-        self.bg_img, _ = load_image('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
+        self.bg_img, _ = load_image_rect('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
 
     def create_menu(self):
         self.menu.set_relative_position(50, 55)
