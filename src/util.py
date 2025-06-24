@@ -25,7 +25,7 @@ def load_image(complete_path):
     """
     return pygame.image.load(resource_path(complete_path))
 
-def load_image_rect(complete_path, colorkey=None, rescale:pygame.Vector2=None, resize:pygame.Vector2=None):
+def load_image_rect(complete_path, colorkey=None, rescale:pygame.Vector2=None, resize:pygame.Vector2=None) -> tuple[pygame.Surface, pygame.Rect]:
     """
     Loads the image ressource of a given name, scale it and recolor it
     if specified.

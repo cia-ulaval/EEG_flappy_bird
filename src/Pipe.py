@@ -33,7 +33,7 @@ class Pipe(pygame.sprite.Sprite):
             self.rect = Pipe.pipe_down_rect.copy()
 
     def update(self, current_scroll_speed: float):
-        self.rect.x += current_scroll_speed
+        self.rect.x -= current_scroll_speed
 
 
 

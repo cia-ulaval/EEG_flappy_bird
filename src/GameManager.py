@@ -1,5 +1,7 @@
 import random
 import asyncio
+from tkinter.constants import CENTER
+import os
 
 import pygame
 import pygame.gfxdraw
@@ -32,11 +34,14 @@ class GameManager:
         self.running = True
         self.pipes_active = True
         self.invincibility = False
+        display_info = pygame.display.Info()
+        self.initial_dimensions = Vector2(display_info.current_w, display_info.current_h)
+        GameConfig.SCREEN_DIMENSION = self.initial_dimensions
+        self.screen = pygame.display.set_mode(
+            (GameConfig.SCREEN_DIMENSION.x, GameConfig.SCREEN_DIMENSION.y))
         self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.icon_img = load_image('assets/ico.png')
         self.ground_img = load_image('assets/ground.png')
-        self.screen = pygame.display.set_mode(
-            Vector2(GameConfig.SCREEN_DIMENSION.x, GameConfig.SCREEN_DIMENSION.y + GameConfig.GROUND_SPACE))
         self.clock = pygame.time.Clock()
         self.setup_pygame()
         self.game = Game(game_manager=self, screen=self.screen)
@@ -48,7 +53,6 @@ class GameManager:
 
     def setup_pygame(self):
         pygame.display.set_icon(self.icon_img)
-        pygame.init()
         pygame.display.set_caption(GameConfig.WINDOW_NAME)
 
     async def start_application(self):
@@ -133,3 +137,18 @@ class GameManager:
         self.scoreboard.record_score(self.username, score)
         self.scoreboard = Scoreboard(screen=self.screen, game_manager=self)
         self.set_level(Levels.SCOREBOARD)
+
+    def update_display_mode(self, fullscreen):
+        new_dimensions = self.initial_dimensions
+        os.environ['SDL_VIDEO_CENTERED'] = '1'
+        if not fullscreen:
+            new_dimensions = Vector2(800, 600)
+
+        GameConfig.SCREEN_DIMENSION = new_dimensions
+        pygame.display.set_mode(new_dimensions)
+        self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
+        self.main_menu = MainMenu(screen=self.screen, game_manager=self)
+        self.pause_menu = PauseMenu(screen=self.screen, game_manager=self)
+        self.options_menu = OptionsMenu(screen=self.screen, game_manager=self)
+        self.scoreboard = Scoreboard(screen=self.screen, game_manager=self)
+        self.game = Game(game_manager=self, screen=self.screen)

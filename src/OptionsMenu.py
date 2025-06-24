@@ -1,6 +1,7 @@
 import pygame_menu as pm
 import pygame
 import pygame_menu.font
+from pygame import Vector2
 
 from src import GameManager
 from src.Difficulty import Difficulty
@@ -54,6 +55,10 @@ class OptionsMenu:
                                  font_color=GameConfig.FONT_COLOR, items=format_difficulties(),
                                  font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_difficulty,
                                  background_color=None, border_width=0, default=0)
+        self.menu.add.toggle_switch(title="Plein Ecran", font_size=GameConfig.MENU_FONT_P_SIZE,
+                                    font_color=GameConfig.FONT_COLOR,
+                                    font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_display_mode,
+                                    default=GameConfig.SCREEN_DIMENSION != Vector2(800, 600), background_color=None, border_width=0)
         self.menu.add.toggle_switch(title="Tuyaux", font_size=GameConfig.MENU_FONT_P_SIZE,
                                  font_color=GameConfig.FONT_COLOR,
                                  font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_pipes_active,
@@ -80,7 +85,7 @@ class OptionsMenu:
     def set_username(self, username):
         self.game_manager.set_username(username)
 
-    def set_difficulty(self, selected, difficulty):
+    def set_difficulty(self, difficulty):
         self.game_manager.set_difficulty(difficulty)
 
     def set_pipes_active(self, pipes_active):
@@ -88,3 +93,6 @@ class OptionsMenu:
 
     def set_invincibility(self, invincible):
         self.game_manager.set_invincibility(invincible)
+
+    def set_display_mode(self, fullscreen):
+        self.game_manager.update_display_mode(fullscreen)

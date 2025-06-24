@@ -1,6 +1,10 @@
+from zipfile import sizeEndCentDir
+
 import pygame
 import random
 from collections import deque
+
+from pygame import Vector2
 
 from src import GameManager
 from src.Bird import Bird
@@ -27,7 +31,6 @@ class Game:
         self.pipes = pygame.sprite.Group()
         self.pipes_pool = deque()
         self.add_pipes()
-
         self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.bg_img, _ = load_image_rect('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
         self.ground_img, _ = load_image_rect('assets/ground.png')
@@ -35,8 +38,8 @@ class Game:
         self.game_manager = game_manager
         self.score_font = pygame.font.SysFont('Segoe', 26)
 
-    def add_pipes(self, initial_count=GameConfig.PIPES_BUFFER):
-        for _ in range(initial_count):
+    def add_pipes(self):
+        for _ in range(GameConfig.PIPES_BUFFER):
             self.pipes_pool.append(Pipe(self.screen, 0, 0, PipeTypes.UP))
             self.pipes_pool.append(Pipe(self.screen, 0, 0, PipeTypes.DOWN))
 
@@ -51,8 +54,15 @@ class Game:
         score_text = self.score_font.render(f"Score: {self.score}", True, (255, 255, 255))  # White text
         self.screen.blit(score_text, (10, 10))
 
-    def draw_ground(self,screen:pygame.Surface):
-        screen.blit(self.ground_img, (self.scroll, GameConfig.SCREEN_DIMENSION.y))
+    def draw_ground(self, screen: pygame.Surface):
+        ground_y = GameConfig.SCREEN_DIMENSION.y - GameConfig.GROUND_SPACE
+        ground_width = self.ground_img.get_width()
+        x = self.scroll
+        while x < GameConfig.SCREEN_DIMENSION.x:
+            screen.blit(self.ground_img, (x, ground_y))
+            x += ground_width
+        if self.scroll > 0:
+            screen.blit(self.ground_img, (self.scroll - ground_width, ground_y))
 
     def draw(self, screen):
         self.pipes.draw(screen)
@@ -61,9 +71,8 @@ class Game:
         self.draw_score()
 
     def update_bg(self):
-        self.scroll += self.max_scroll_speed
-        if abs(self.scroll) > 450 or self.bird.first_jump:
-            self.scroll = 0
+        ground_width = self.ground_img.get_width()
+        self.scroll -= self.max_scroll_speed
 
     def update(self, dt):
         pipes_active = self.game_manager.get_pipes_active()
@@ -107,9 +116,9 @@ class Game:
         pipes_top = self.pipes_pool.pop()
         pipes_bottom = self.pipes_pool.pop()
 
-        screen_width = GameConfig.SCREEN_DIMENSION[0]
-        gap_height = random.randint(int(100 / (1 + self.difficulty_coefficient)),
-                                    int(200 / (1 + self.difficulty_coefficient)))
+        screen_width, screen_height = GameConfig.SCREEN_DIMENSION.x, GameConfig.SCREEN_DIMENSION.y
+        gap_height = random.randint(int(100 * (screen_height / 500) / (1 + self.difficulty_coefficient)),
+                                    int(200 * (screen_height / 500) / (1 + self.difficulty_coefficient)))
         y_top = random.randint(-500, -325)
         y_bottom = y_top + gap_height + 700
 
@@ -126,12 +135,12 @@ class Game:
     def calculate_difficulty_values(self):
         difficulty = self.game_manager.get_difficulty()
         if difficulty != 0 and self.score % GameConfig.SCORES_DIFFICULTY_CHECKPOINTS[difficulty - 1] == 0:
-            if self.max_scroll_speed <= GameConfig.MAX_SCROLL_SPEED_AUGMENTATIONS[difficulty - 1]:
-                self.max_scroll_speed -= GameConfig.SCROLL_SPEED_AUGMENTATIONS[difficulty - 1]
+            if self.max_scroll_speed <= GameConfig.MAX_SCROLL_SPEED_AUGMENTATIONS[difficulty - 1] * GameConfig.SCREEN_DIMENSION_DIFFICULTY_INCREASE:
+                self.max_scroll_speed += GameConfig.SCROLL_SPEED_AUGMENTATIONS[difficulty - 1]  * GameConfig.SCREEN_DIMENSION_DIFFICULTY_INCREASE
             else:
                 print("Maximum scroll speed has been reached")
-            if self.difficulty_coefficient <= GameConfig.MAX_DIFFICULTY_COEFFICIENTS[difficulty - 1]:
-                self.difficulty_coefficient += GameConfig.DIFFICULTY_COEFFICIENTS[difficulty - 1]
+            if self.difficulty_coefficient <= GameConfig.MAX_DIFFICULTY_COEFFICIENTS[difficulty - 1] * GameConfig.SCREEN_DIMENSION_DIFFICULTY_INCREASE:
+                self.difficulty_coefficient += GameConfig.DIFFICULTY_COEFFICIENTS[difficulty - 1] * GameConfig.SCREEN_DIMENSION_DIFFICULTY_INCREASE
             else:
                 print("Maximum difficulty has been reached")
 
@@ -145,8 +154,3 @@ class Game:
 
     def set_paused(self, paused):
         self.paused = paused
-
-
-
-
-
