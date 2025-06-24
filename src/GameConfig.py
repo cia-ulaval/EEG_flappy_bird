@@ -1,8 +1,9 @@
+import pygame
 from pygame import Vector2
 from src.Levels import Levels
 
 class GameConfig:
-    SCREEN_DIMENSION = Vector2(800, 600)
+    SCREEN_DIMENSION = Vector2(pygame.display.Info().current_w, pygame.display.Info().current_h)
     WINDOW_NAME = "Flappy Brain"
     REFRESH_RATE = 60
     INITIAL_SCROLL_SPEED = -4
