@@ -53,7 +53,7 @@ jobs:
       run: |
         mkdir -p webapp/public/flapeeg
         cp -r source/build/web/* webapp/public/flapeeg/
-        cp flapeeg.exe webapp/public/flapeeg/flapeeg.exe
+        cp source/build/win/flapeeg.exe webapp/public/flapeeg/flapeeg.exe
 
     - name: Push web build to new branch and create Pull Request
       working-directory: webapp
