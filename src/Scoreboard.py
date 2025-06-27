@@ -10,8 +10,6 @@ from src.GameConfig import GameConfig
 from src import GameManager
 from src.Levels import Levels
 
-
-
 class Scoreboard:
     def __init__(self, screen:pygame.Surface, game_manager: GameManager):
         self.game_manager = game_manager

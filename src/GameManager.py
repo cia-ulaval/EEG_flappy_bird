@@ -1,6 +1,5 @@
 import random
 import asyncio
-from tkinter.constants import CENTER
 import os
 
 import pygame

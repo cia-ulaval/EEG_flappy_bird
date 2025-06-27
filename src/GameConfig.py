@@ -1,4 +1,3 @@
-import pygame
 from pygame import Vector2
 from src.Levels import Levels
 

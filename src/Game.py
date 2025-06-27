@@ -1,10 +1,6 @@
-from zipfile import sizeEndCentDir
-
 import pygame
 import random
 from collections import deque
-
-from pygame import Vector2
 
 from src import GameManager
 from src.Bird import Bird

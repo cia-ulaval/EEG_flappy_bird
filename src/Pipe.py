@@ -1,6 +1,5 @@
 import pygame
 
-from src.GameConfig import GameConfig
 from src.PipeTypes import PipeTypes
 from src.util import load_image_rect
 
@@ -8,7 +7,7 @@ class Pipe(pygame.sprite.Sprite):
     pipe_up_image, pipe_up_rect = None, None
     pipe_down_image, pipe_down_rect = None, None
 
-    def __init__(self, screen: pygame.Surface, x: int, y: int, pipe_type: PipeTypes):
+    def __init__(self, x: int, y: int, pipe_type: PipeTypes):
         pygame.sprite.Sprite.__init__(self)
         self.rect, self.image, self.pipe_type = None, None, None
         if Pipe.pipe_up_image is None:

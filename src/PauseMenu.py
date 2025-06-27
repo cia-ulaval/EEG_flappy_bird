@@ -8,7 +8,6 @@ from src.util import load_image_rect, get_menu_theme, load_image
 from src.GameConfig import GameConfig
 from src.Levels import Levels
 
-
 class PauseMenu:
     def __init__(self, screen:pygame.Surface, game_manager: GameManager):
         self.game_manager = game_manager
