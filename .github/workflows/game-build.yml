@@ -1,0 +1,74 @@
+name: Build and Deploy Game
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout source repository (EEG_flappy_bird)
+      uses: actions/checkout@v3
+      with:
+        path: source
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pygbag pyinstaller
+        pip install -r source/requirements.txt
+
+    - name: Build web version with Pygbag
+      working-directory: source
+      run: |
+        python -m pygbag --build --ume_block 0 main.py
+        cp -r assets build/web/
+        mkdir -p build/web/data
+        touch build/web/data/scores.json
+
+    - name: Build Windows executable with PyInstaller
+      working-directory: source
+      run: |
+        pyinstaller --noconsole --onefile --add-data "assets;assets" --add-data "data;data" --distpath "build\\win" --name flapeeg main.py
+
+    - name: Checkout target repository (WBL-WebApp)
+      uses: actions/checkout@v3
+      with:
+        repository: VillyGH/WBL-WebApp
+        token: ${{ secrets.WEBAPP_PUSH_TOKEN }}
+        path: webapp
+        fetch-depth: 0
+
+    - name: Copy web build to target repository
+      shell: bash
+      run: |
+        mkdir -p webapp/public/flapeeg
+        cp -r source/build/web/* webapp/public/flapeeg/
+        cp source/build/win/flapeeg.exe webapp/public/flapeeg/flapeeg.exe
+
+    - name: Push web build to new branch and create Pull Request
+      working-directory: webapp
+      env:
+        GH_TOKEN: ${{ secrets.WEBAPP_PUSH_TOKEN }}
+      run: |
+        git checkout -b flapeeg-game-build-${{ github.run_number }}
+
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+        git add public/flapeeg/
+        git commit -m "Update flapeeg web build from EEG_flappy_bird"
+
+        git remote set-url origin https://x-access-token:${{ secrets.WEBAPP_PUSH_TOKEN }}@github.com/VillyGH/WBL-WebApp.git
+        git push origin flapeeg-game-build-${{ github.run_number }}
+
+        gh pr create --base master --head "flapeeg-game-build-${{ github.run_number }}" --title "Update flapeeg web build" --body "This pull request updates the flapeeg web build from EEG_flappy_bird."

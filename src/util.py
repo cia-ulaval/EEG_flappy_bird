@@ -1,4 +1,5 @@
 import os
+import sys
 import pygame_menu as pm
 import pygame_menu.font
 from src.GameConfig import GameConfig
@@ -10,7 +11,21 @@ import pygame
 # relevant to share throughout the project
 #####################################################
 
-def load_image(complete_path, colorkey=None, rescale:pygame.Vector2=None, resize:pygame.Vector2=None):
+def resource_path(relative_path):
+    """Returns the absolute path to the resource"""
+    base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
+    return os.path.join(base_path, relative_path)
+
+def load_image(complete_path):
+    """
+    Loads the image ressource of a given name and return it if valid.
+
+    Returns:
+        pygame.Surface.
+    """
+    return pygame.image.load(resource_path(complete_path))
+
+def load_image_rect(complete_path, colorkey=None, rescale:pygame.Vector2=None, resize:pygame.Vector2=None) -> tuple[pygame.Surface, pygame.Rect]:
     """
     Loads the image ressource of a given name, scale it and recolor it
     if specified.
@@ -24,7 +39,7 @@ def load_image(complete_path, colorkey=None, rescale:pygame.Vector2=None, resize
     Returns:
         pygame.Surface, pygame.Rect: Loaded image.
     """
-    image = pygame.image.load(complete_path)
+    image = pygame.image.load(resource_path(complete_path))
 
     if rescale:
         size = image.get_size()
