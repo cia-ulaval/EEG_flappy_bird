@@ -66,7 +66,7 @@ class OptionsMenu:
         self.menu.add.toggle_switch(title="Invincibilite", font_size=GameConfig.MENU_FONT_P_SIZE,
                                     font_color=GameConfig.FONT_COLOR,
                                     font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_invincibility,
-                                    default=True, background_color=None, border_width=0)
+                                    default=False, background_color=None, border_width=0)
         self.menu.add.range_slider(title="Son", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
                                    font_name=pygame_menu.font.FONT_8BIT, onchange=set_sound_level,
                                    range_values=[0, 100], default=50, background_color=None, border_width=0, increment=1)
