@@ -11,6 +11,9 @@ class InputManager:
                 InputManager.jump_down = True
             if event.key == pygame.K_ESCAPE:
                 InputManager.echap_pressed = True
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                InputManager.jump_down = True
 
     @staticmethod
     def refresh_inputs():
