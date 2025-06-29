@@ -35,10 +35,10 @@ class Game:
         self.game_manager = game_manager
         self.score_font = pygame.font.SysFont('Segoe', 26)
 
-    def add_pipes(self, initial_count=GameConfig.PIPES_BUFFER):
-        for _ in range(initial_count):
-            self.pipes_pool.append(Pipe(self.screen, 0, 0, PipeTypes.UP))
-            self.pipes_pool.append(Pipe(self.screen, 0, 0, PipeTypes.DOWN))
+    def add_pipes(self):
+        for _ in range(GameConfig.PIPES_BUFFER):
+            self.pipes_pool.append(Pipe(0, 0, PipeTypes.UP))
+            self.pipes_pool.append(Pipe(0, 0, PipeTypes.DOWN))
 
     def click(self):
        pass
