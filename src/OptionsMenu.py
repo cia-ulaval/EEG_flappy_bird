@@ -1,7 +1,6 @@
 import pygame_menu as pm
 import pygame
 import pygame_menu.font
-from pygame import Vector2
 
 from src import GameManager
 from src.Difficulty import Difficulty
@@ -58,7 +57,7 @@ class OptionsMenu:
         self.menu.add.toggle_switch(title="Plein Ecran", font_size=GameConfig.MENU_FONT_P_SIZE,
                                     font_color=GameConfig.FONT_COLOR,
                                     font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_display_mode,
-                                    default=GameConfig.SCREEN_DIMENSION != Vector2(800, 600), background_color=None, border_width=0)
+                                    default=GameConfig.SCREEN_DIMENSION != GameConfig.DEFAULT_SCREEN_DIMENSIONS, background_color=None, border_width=0)
         self.menu.add.toggle_switch(title="Tuyaux", font_size=GameConfig.MENU_FONT_P_SIZE,
                                  font_color=GameConfig.FONT_COLOR,
                                  font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_pipes_active,
@@ -66,7 +65,7 @@ class OptionsMenu:
         self.menu.add.toggle_switch(title="Invincibilite", font_size=GameConfig.MENU_FONT_P_SIZE,
                                     font_color=GameConfig.FONT_COLOR,
                                     font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_invincibility,
-                                    default=True, background_color=None, border_width=0)
+                                    default=False, background_color=None, border_width=0)
         self.menu.add.range_slider(title="Son", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
                                    font_name=pygame_menu.font.FONT_8BIT, onchange=set_sound_level,
                                    range_values=[0, 100], default=50, background_color=None, border_width=0, increment=1)
@@ -75,7 +74,7 @@ class OptionsMenu:
 
     def draw(self, screen):
         overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
-        overlay.fill((0, 0, 0, 64))
+        overlay.fill((0, 0, 0, GameConfig.BACKGROUND_OVERLAY_DARKNESS))
         screen.blit(overlay, (0, 0))
         self.menu.draw(screen)
 

@@ -27,6 +27,12 @@ class Game:
         self.pipes = pygame.sprite.Group()
         self.pipes_pool = deque()
         self.add_pipes()
+        self.ground_img, _ = load_image_rect('assets/ground.png')
+        self.screen_width = GameConfig.SCREEN_DIMENSION.x
+        self.screen_height = GameConfig.SCREEN_DIMENSION.y
+        self.ground_width = self.ground_img.get_width()
+        self.pipes_active = game_manager.get_pipes_active()
+        self.invincible = game_manager.get_invincibility()
         self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.bg_img, _ = load_image_rect('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
         self.ground_img, _ = load_image_rect('assets/ground.png')
@@ -47,18 +53,14 @@ class Game:
         self.calculate_difficulty_values()
 
     def draw_score(self):
-        score_text = self.score_font.render(f"Score: {self.score}", True, (255, 255, 255))  # White text
+        score_text = self.score_font.render(f"Score: {self.score}", True, GameConfig.FONT_COLOR)
         self.screen.blit(score_text, (10, 10))
 
     def draw_ground(self, screen: pygame.Surface):
-        ground_y = GameConfig.SCREEN_DIMENSION.y - GameConfig.GROUND_SPACE
-        ground_width = self.ground_img.get_width()
-        x = self.scroll
-        while x < GameConfig.SCREEN_DIMENSION.x:
-            screen.blit(self.ground_img, (x, ground_y))
-            x += ground_width
-        if self.scroll > 0:
-            screen.blit(self.ground_img, (self.scroll - ground_width, ground_y))
+        n = int((self.screen_width - self.scroll) // self.ground_width + 2)
+        for i in range(n):
+            x = self.scroll + i * self.ground_width
+            screen.blit(self.ground_img, (x, self.screen_height - GameConfig.GROUND_SPACE))
 
     def draw(self, screen):
         self.pipes.draw(screen)
@@ -67,12 +69,9 @@ class Game:
         self.draw_score()
 
     def update_bg(self):
-        ground_width = self.ground_img.get_width()
         self.scroll -= self.max_scroll_speed
 
     def update(self, dt):
-        pipes_active = self.game_manager.get_pipes_active()
-        invincible = self.game_manager.get_invincibility()
         if InputManager.echap_pressed:
             self.paused = True
             self.game_manager.set_level(Levels.PAUSE_MENU)
@@ -81,17 +80,17 @@ class Game:
             if difficulty is Difficulty.FACILE.value:
                 self.bird.reset_first_jump()
         if InputManager.is_jump_down():
-            self.bird.jump(dt)
-        if (not invincible) and any(pipe.rect.colliderect(self.bird.collision_rect) for pipe in self.pipes) | self.bird.crashed():
+            self.bird.jump()
+        if (not self.invincible) and (pygame.sprite.spritecollideany(self.bird, self.pipes) or self.bird.crashed()):
             self.game_over()
         else:
             self.scroll_speed = self.max_scroll_speed
         self.update_bg()
-        if not self.bird.first_jump and pipes_active and not self.paused:
+        if not self.bird.first_jump and self.pipes_active and not self.paused:
             self.pipes.update(self.max_scroll_speed)
             self.group.update(dt)
-            for pipe in self.pipes:
-                if pipe.rect.x <= -GameConfig.SCREEN_DIMENSION.x:
+            for pipe in list(self.pipes):
+                if pipe.rect.x <= -self.screen_width:
                     self.pipes.remove(pipe)
                     self.pipes_pool.append(pipe)
                 if pipe.pipe_type == PipeTypes.DOWN and not pipe.passed and pipe.rect.right < self.bird.rect.left:
@@ -99,10 +98,12 @@ class Game:
                     self.add_score()
             if self.pipe_timer <= 0:
                 self.spawn_pipes()
-                self.pipe_timer = random.randint(int(75 / (1 + self.difficulty_coefficient)), int(150 / (1 + self.difficulty_coefficient)))
+                self.pipe_timer = random.randint(
+                    int(75 / (1 + self.difficulty_coefficient)),
+                    int(150 / (1 + self.difficulty_coefficient))
+                )
             self.pipe_timer -= 1
-            
-        elif not self.bird.first_jump and not pipes_active:
+        elif not self.bird.first_jump and not self.pipes_active:
             self.group.update(dt)
 
     def spawn_pipes(self):
@@ -112,18 +113,17 @@ class Game:
         pipes_top = self.pipes_pool.pop()
         pipes_bottom = self.pipes_pool.pop()
 
-        screen_width, screen_height = GameConfig.SCREEN_DIMENSION.x, GameConfig.SCREEN_DIMENSION.y
-        gap_height = random.randint(int(100 * (screen_height / 500) / (1 + self.difficulty_coefficient)),
-                                    int(200 * (screen_height / 500) / (1 + self.difficulty_coefficient)))
+        gap_height = random.randint(int(50 * (self.screen_height / 250) / (1 + self.difficulty_coefficient)),
+                                    int(100 * (self.screen_height / 250) / (1 + self.difficulty_coefficient)))
         y_top = random.randint(-500, -325)
         y_bottom = y_top + gap_height + 700
 
         pipes_top.set_pipe_type(PipeTypes.UP)
-        pipes_top.set_position(screen_width, y_top)
+        pipes_top.set_position(self.screen_width, y_top)
         pipes_top.passed = False
 
         pipes_bottom.set_pipe_type(PipeTypes.DOWN)
-        pipes_bottom.set_position(screen_width, y_bottom)
+        pipes_bottom.set_position(self.screen_width, y_bottom)
         pipes_bottom.passed = False
 
         self.pipes.add(pipes_top, pipes_bottom)

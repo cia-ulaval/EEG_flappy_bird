@@ -13,8 +13,8 @@ class Bird(pygame.sprite.Sprite):
         self.bird_image, self.bird = load_image_rect("assets/brainDefault.png", -1)
         self.bird_flap_image, self.bird_flap_rect = load_image_rect("assets/brainFlap.png", -1)
         self.bird_mid_flap_image, self.bird_mid_flap_rect = load_image_rect("assets/brainMidFlap.png", -1)
-        self.bird.center = (screen.get_width() / 2,
-                                  screen.get_height() / 2)
+        self.bird.center = (int(screen.get_width() / 2),
+                                  int(screen.get_height() / 2))
         self.first_jump = True
         self.image = self.bird_image
         self.rect = self.bird
@@ -46,7 +46,7 @@ class Bird(pygame.sprite.Sprite):
                 self.bird.centerx,
                 self.bird.centery)
 
-    def jump(self, dt):
+    def jump(self):
         if self.first_jump:
             self.first_jump = False
         self.jump_timer = pygame.time.get_ticks() + GameConfig.FLAP_ANIMATION_TIMING
@@ -58,10 +58,7 @@ class Bird(pygame.sprite.Sprite):
             self.velocity.y += GameConfig.GRAVITY_FORCE * dt
 
     def crashed(self):
-        crashed = False
-        if self.bird.centery == GameConfig.SCREEN_DIMENSION.y - GameConfig.GROUND_SPACE / 2.5:
-            crashed = True
-        return crashed
+        return self.bird.bottom >= (GameConfig.SCREEN_DIMENSION.y - GameConfig.GROUND_SPACE)
 
     def reset_velocity(self):
         self.velocity.x = 0

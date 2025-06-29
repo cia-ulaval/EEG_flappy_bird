@@ -4,6 +4,8 @@ import pygame_menu as pm
 import json
 import pygame
 import pygame_menu.font
+from pygame import Vector2
+
 from src.InputManager import InputManager
 from src.util import load_image_rect, get_menu_theme, load_image, resource_path
 from src.GameConfig import GameConfig
@@ -11,7 +13,7 @@ from src import GameManager
 from src.Levels import Levels
 
 class Scoreboard:
-    def __init__(self, screen:pygame.Surface, game_manager: GameManager):
+    def __init__(self, game_manager: GameManager):
         self.game_manager = game_manager
         self.file = open("data/scores.json")
         self.data = json.load(self.file)
@@ -40,7 +42,7 @@ class Scoreboard:
     def resize_components(self):
         self.bg_img, _ = load_image_rect('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
         self.leaderboard, _ = load_image_rect('assets/bgScoreboard.png',
-                                              resize=(GameConfig.SCREEN_DIMENSION[0] - 200, GameConfig.SCREEN_DIMENSION[1] - 50))
+                                              resize=Vector2(GameConfig.SCREEN_DIMENSION[0] - 200, GameConfig.SCREEN_DIMENSION[1] - 50))
 
     def create_menu(self):
         self.menu.set_relative_position(50, 55)
