@@ -72,7 +72,6 @@ class Game:
         self.scroll -= self.max_scroll_speed
 
     def update(self, dt):
-
         if InputManager.echap_pressed:
             self.paused = True
             self.game_manager.set_level(Levels.PAUSE_MENU)
@@ -81,7 +80,7 @@ class Game:
             if difficulty is Difficulty.FACILE.value:
                 self.bird.reset_first_jump()
         if InputManager.is_jump_down():
-            self.bird.jump(dt)
+            self.bird.jump()
         if (not self.invincible) and (pygame.sprite.spritecollideany(self.bird, self.pipes) or self.bird.crashed()):
             self.game_over()
         else:

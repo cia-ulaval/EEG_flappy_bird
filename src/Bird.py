@@ -46,7 +46,7 @@ class Bird(pygame.sprite.Sprite):
                 self.bird.centerx,
                 self.bird.centery)
 
-    def jump(self, dt):
+    def jump(self):
         if self.first_jump:
             self.first_jump = False
         self.jump_timer = pygame.time.get_ticks() + GameConfig.FLAP_ANIMATION_TIMING
