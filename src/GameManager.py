@@ -48,7 +48,6 @@ class GameManager:
         self.pause_menu = PauseMenu(screen=self.screen, game_manager=self)
         self.options_menu = OptionsMenu(screen=self.screen, game_manager=self)
         self.scoreboard = Scoreboard(game_manager=self)
-        self.set_invincibility(True)
 
     def setup_pygame(self):
         pygame.display.set_icon(self.icon_img)
