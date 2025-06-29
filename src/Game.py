@@ -15,8 +15,8 @@ from src.util import load_image_rect, load_image
 
 class Game:
     def __init__(self, screen:pygame.Surface, game_manager:GameManager):
-        self.scroll_speed = GameConfig.INITIAL_SCROLL_SPEED
-        self.max_scroll_speed = GameConfig.INITIAL_SCROLL_SPEED
+        self.scroll_speed = GameConfig.SCROLL_SPEED
+        self.max_scroll_speed = GameConfig.SCROLL_SPEED
         self.paused = False
         self.score = 0
         self.bird = Bird(screen)
