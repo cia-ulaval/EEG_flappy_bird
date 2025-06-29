@@ -50,7 +50,7 @@ class MainMenu:
 
     def draw(self, screen):
         overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
-        overlay.fill((0, 0, 0, 64))
+        overlay.fill((0, 0, 0, GameConfig.BACKGROUND_OVERLAY_DARKNESS))
         screen.blit(overlay, (0, 0))
         self.menu.draw(screen)
 

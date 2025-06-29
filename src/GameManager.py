@@ -47,7 +47,7 @@ class GameManager:
         self.main_menu = MainMenu(screen=self.screen, game_manager=self)
         self.pause_menu = PauseMenu(screen=self.screen, game_manager=self)
         self.options_menu = OptionsMenu(screen=self.screen, game_manager=self)
-        self.scoreboard = Scoreboard(screen=self.screen, game_manager=self)
+        self.scoreboard = Scoreboard(game_manager=self)
         self.set_invincibility(True)
 
     def setup_pygame(self):
@@ -134,14 +134,14 @@ class GameManager:
 
     def record_score(self, score):
         self.scoreboard.record_score(self.username, score)
-        self.scoreboard = Scoreboard(screen=self.screen, game_manager=self)
+        self.scoreboard = Scoreboard(game_manager=self)
         self.set_level(Levels.SCOREBOARD)
 
     def update_display_mode(self, fullscreen):
         new_dimensions = self.initial_dimensions
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         if not fullscreen:
-            new_dimensions = Vector2(800, 600)
+            new_dimensions = GameConfig.DEFAULT_SCREEN_DIMENSIONS
 
         GameConfig.SCREEN_DIMENSION = new_dimensions
         pygame.display.set_mode(new_dimensions)
@@ -149,5 +149,5 @@ class GameManager:
         self.main_menu = MainMenu(screen=self.screen, game_manager=self)
         self.pause_menu = PauseMenu(screen=self.screen, game_manager=self)
         self.options_menu = OptionsMenu(screen=self.screen, game_manager=self)
-        self.scoreboard = Scoreboard(screen=self.screen, game_manager=self)
+        self.scoreboard = Scoreboard(game_manager=self)
         self.game = Game(game_manager=self, screen=self.screen)
