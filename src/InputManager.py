@@ -7,7 +7,7 @@ class InputManager:
     @staticmethod
     def handle_event(event:pygame.event.Event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LSHIFT:
+            if event.key == pygame.K_SPACE:
                 InputManager.jump_down = True
             if event.key == pygame.K_ESCAPE:
                 InputManager.echap_pressed = True
