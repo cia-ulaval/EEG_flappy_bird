@@ -31,6 +31,8 @@ class Game:
         self.screen_width = GameConfig.SCREEN_DIMENSION.x
         self.screen_height = GameConfig.SCREEN_DIMENSION.y
         self.ground_width = self.ground_img.get_width()
+        self.pipes_active = game_manager.get_pipes_active()
+        self.invincible = game_manager.get_invincibility()
         self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.bg_img, _ = load_image_rect('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
         self.ground_img, _ = load_image_rect('assets/ground.png')
@@ -70,8 +72,7 @@ class Game:
         self.scroll -= self.max_scroll_speed
 
     def update(self, dt):
-        pipes_active = self.game_manager.get_pipes_active()
-        invincible = self.game_manager.get_invincibility()
+
         if InputManager.echap_pressed:
             self.paused = True
             self.game_manager.set_level(Levels.PAUSE_MENU)
@@ -81,12 +82,12 @@ class Game:
                 self.bird.reset_first_jump()
         if InputManager.is_jump_down():
             self.bird.jump(dt)
-        if (not invincible) and (pygame.sprite.spritecollideany(self.bird, self.pipes) or self.bird.crashed()):
+        if (not self.invincible) and (pygame.sprite.spritecollideany(self.bird, self.pipes) or self.bird.crashed()):
             self.game_over()
         else:
             self.scroll_speed = self.max_scroll_speed
         self.update_bg()
-        if not self.bird.first_jump and pipes_active and not self.paused:
+        if not self.bird.first_jump and self.pipes_active and not self.paused:
             self.pipes.update(self.max_scroll_speed)
             self.group.update(dt)
             for pipe in list(self.pipes):
@@ -103,7 +104,7 @@ class Game:
                     int(150 / (1 + self.difficulty_coefficient))
                 )
             self.pipe_timer -= 1
-        elif not self.bird.first_jump and not pipes_active:
+        elif not self.bird.first_jump and not self.pipes_active:
             self.group.update(dt)
 
     def spawn_pipes(self):

@@ -58,10 +58,7 @@ class Bird(pygame.sprite.Sprite):
             self.velocity.y += GameConfig.GRAVITY_FORCE * dt
 
     def crashed(self):
-        crashed = False
-        if self.bird.centery == GameConfig.SCREEN_DIMENSION.y - GameConfig.GROUND_SPACE / 2.5:
-            crashed = True
-        return crashed
+        return self.bird.bottom >= (GameConfig.SCREEN_DIMENSION.y - GameConfig.GROUND_SPACE)
 
     def reset_velocity(self):
         self.velocity.x = 0
