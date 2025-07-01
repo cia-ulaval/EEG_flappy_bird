@@ -15,8 +15,8 @@ from src.util import load_image_rect, load_image
 
 class Game:
     def __init__(self, screen:pygame.Surface, game_manager:GameManager):
-        self.scroll_speed = GameConfig.SCROLL_SPEED
-        self.max_scroll_speed = GameConfig.SCROLL_SPEED
+        self.scroll_speed = GameConfig.INITIAL_SCROLL_SPEED
+        self.max_scroll_speed = GameConfig.INITIAL_SCROLL_SPEED
         self.paused = False
         self.score = 0
         self.bird = Bird(screen)
@@ -39,6 +39,7 @@ class Game:
         self.group = pygame.sprite.RenderPlain((self.bird))
         self.game_manager = game_manager
         self.score_font = pygame.font.SysFont('Segoe', 26)
+
 
     def add_pipes(self):
         for _ in range(GameConfig.PIPES_BUFFER):
@@ -105,18 +106,19 @@ class Game:
 
     def spawn_pipes(self):
         if len(self.pipes_pool) < 2:
-            print("Not enough pipes in the pool, adding more")
             self.add_pipes()
 
         pipes_top = self.pipes_pool.pop()
         pipes_bottom = self.pipes_pool.pop()
 
-        min_gap = int(0.1 * self.screen_height / (1 + self.difficulty_coefficient))
-        max_gap = int(0.18 * self.screen_height / (1 + self.difficulty_coefficient))
+        abs_min_gap = int(150 / ((1 + self.difficulty_coefficient) * 2))
+        min_gap = max(int(0.20 * self.screen_height / (1 + self.difficulty_coefficient)), abs_min_gap)
+        max_gap = max(int(0.35 * self.screen_height / (1 + self.difficulty_coefficient)), abs_min_gap + 30)
 
-        pipe_visible_height = int(0.73 * self.screen_height)
-        y_top_min = int(0.3 * (1 + (self.difficulty_coefficient / 100)) * self.screen_height) - pipe_visible_height
-        y_top_max = int(0.7 / (1 + (self.difficulty_coefficient / 100)) * self.screen_height) - min_gap - pipe_visible_height
+        abs_min_visible_height = 700
+        pipe_visible_height = max(int(0.73 * self.screen_height), abs_min_visible_height)
+        y_top_min = int((0.25 * (1 + (self.difficulty_coefficient / 500))) * self.screen_height) - pipe_visible_height
+        y_top_max = int((0.6 / (1 + (self.difficulty_coefficient / 500))) * self.screen_height) - min_gap - pipe_visible_height
 
         gap_height = random.randint(min_gap, max_gap)
         y_top = random.randint(y_top_min, y_top_max)
@@ -133,14 +135,15 @@ class Game:
         self.pipes.add(pipes_top, pipes_bottom)
 
     def calculate_difficulty_values(self):
-        difficulty = self.game_manager.get_difficulty()
-        if difficulty != 0 and self.score % GameConfig.SCORES_DIFFICULTY_CHECKPOINTS[difficulty - 1] == 0:
-            if self.max_scroll_speed <= GameConfig.MAX_SCROLL_SPEED_AUGMENTATIONS[difficulty - 1] * GameConfig.SCREEN_DIMENSION_DIFFICULTY_INCREASE:
-                self.max_scroll_speed += GameConfig.SCROLL_SPEED_AUGMENTATIONS[difficulty - 1]  * GameConfig.SCREEN_DIMENSION_DIFFICULTY_INCREASE
+        difficulty = self.game_manager.get_difficulty() - 1
+        if difficulty >= 0 and self.score % GameConfig.SCORES_DIFFICULTY_CHECKPOINTS[difficulty] == 0:
+            if self.max_scroll_speed <= GameConfig.INITIAL_SCROLL_SPEED + GameConfig.MAX_SCROLL_SPEED_AUGMENTATIONS[difficulty]:
+                self.max_scroll_speed += GameConfig.SCROLL_SPEED_AUGMENTATIONS[difficulty]
+                print(self.max_scroll_speed)
             else:
                 print("Maximum scroll speed has been reached")
-            if self.difficulty_coefficient <= GameConfig.MAX_DIFFICULTY_COEFFICIENTS[difficulty - 1] * GameConfig.SCREEN_DIMENSION_DIFFICULTY_INCREASE:
-                self.difficulty_coefficient += GameConfig.DIFFICULTY_COEFFICIENTS[difficulty - 1] * GameConfig.SCREEN_DIMENSION_DIFFICULTY_INCREASE
+            if self.difficulty_coefficient <= GameConfig.MAX_DIFFICULTY_COEFFICIENTS[difficulty]:
+                self.difficulty_coefficient += GameConfig.DIFFICULTY_COEFFICIENTS[difficulty]
             else:
                 print("Maximum difficulty has been reached")
 

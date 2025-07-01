@@ -29,9 +29,9 @@ def set_scroll_speed():
     thresholds = sorted(GameConfig.SCROLL_SPEEDS.keys(), reverse=True)
     for threshold in thresholds:
         if screen_width >= threshold:
-            GameConfig.SCROLL_SPEED = GameConfig.SCROLL_SPEEDS[threshold]
+            GameConfig.INITIAL_SCROLL_SPEED = GameConfig.SCROLL_SPEEDS[threshold]
             return
-    GameConfig.SCROLL_SPEED = next(iter(GameConfig.SCROLL_SPEEDS.values()))
+    GameConfig.INITIAL_SCROLL_SPEED = next(iter(GameConfig.SCROLL_SPEEDS.values()))
 
 
 class GameManager:
