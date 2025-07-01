@@ -5,7 +5,7 @@ from src.Levels import Levels
 
 class GameConfig:
     DEFAULT_DISPLAY_MODE = DisplayModes.FULLSCREEN
-    DEFAULT_SCREEN_DIMENSIONS = Vector2(1850, 900)
+    DEFAULT_SCREEN_DIMENSIONS = Vector2(1200, 800)
     SCREEN_DIMENSION = DEFAULT_SCREEN_DIMENSIONS
     WINDOW_NAME = "Flappy Brain"
     REFRESH_RATE = 60
