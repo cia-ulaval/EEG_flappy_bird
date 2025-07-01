@@ -154,12 +154,10 @@ class GameManager:
         self.set_level(Levels.SCOREBOARD)
 
     def update_display_mode(self, fullscreen):
-        scroll_speed = GameConfig.FULLSCREEN_SCROLL_SPEED
         new_dimensions = self.initial_dimensions
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         if not fullscreen:
             new_dimensions = GameConfig.DEFAULT_SCREEN_DIMENSIONS
-            scroll_speed = GameConfig.SMALL_SCREEN_SCROLL_SPEED
 
         GameConfig.SCREEN_DIMENSION = new_dimensions
         pygame.display.set_mode(new_dimensions)
