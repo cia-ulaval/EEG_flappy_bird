@@ -45,9 +45,6 @@ class Game:
             self.pipes_pool.append(Pipe(0, 0, PipeTypes.UP))
             self.pipes_pool.append(Pipe(0, 0, PipeTypes.DOWN))
 
-    def click(self):
-       pass
-
     def add_score(self):
         self.score += 1
         self.calculate_difficulty_values()
@@ -108,15 +105,22 @@ class Game:
 
     def spawn_pipes(self):
         if len(self.pipes_pool) < 2:
+            print("Not enough pipes in the pool, adding more")
             self.add_pipes()
 
         pipes_top = self.pipes_pool.pop()
         pipes_bottom = self.pipes_pool.pop()
 
-        gap_height = random.randint(int(50 * (self.screen_height / 250) / (1 + self.difficulty_coefficient)),
-                                    int(100 * (self.screen_height / 250) / (1 + self.difficulty_coefficient)))
-        y_top = random.randint(-500, -325)
-        y_bottom = y_top + gap_height + 700
+        min_gap = int(0.1 * self.screen_height / (1 + self.difficulty_coefficient))
+        max_gap = int(0.18 * self.screen_height / (1 + self.difficulty_coefficient))
+
+        pipe_visible_height = int(0.73 * self.screen_height)
+        y_top_min = int(0.3 * (1 + (self.difficulty_coefficient / 100)) * self.screen_height) - pipe_visible_height
+        y_top_max = int(0.7 / (1 + (self.difficulty_coefficient / 100)) * self.screen_height) - min_gap - pipe_visible_height
+
+        gap_height = random.randint(min_gap, max_gap)
+        y_top = random.randint(y_top_min, y_top_max)
+        y_bottom = y_top + gap_height + pipe_visible_height
 
         pipes_top.set_pipe_type(PipeTypes.UP)
         pipes_top.set_position(self.screen_width, y_top)
