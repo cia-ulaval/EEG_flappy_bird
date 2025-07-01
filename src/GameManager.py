@@ -23,6 +23,24 @@ from src.util import load_image
 def get_difficulty_from_value(value):
     return next((diff for diff in Difficulty if diff.value == value), None)
 
+
+def set_scroll_speed():
+    screen_width = GameConfig.SCREEN_DIMENSION.x
+    thresholds = [
+        (2440, GameConfig.SCROLL_SPEEDS[6]),
+        (2120, GameConfig.SCROLL_SPEEDS[5]),
+        (1920, GameConfig.SCROLL_SPEEDS[4]),
+        (1750, GameConfig.SCROLL_SPEEDS[3]),
+        (1500, GameConfig.SCROLL_SPEEDS[2]),
+        (1000, GameConfig.SCROLL_SPEEDS[1]),
+    ]
+    for threshold, speed in thresholds:
+        if screen_width >= threshold:
+            GameConfig.SCROLL_SPEED = speed
+            return
+    GameConfig.SCROLL_SPEED = GameConfig.SCROLL_SPEEDS[0]
+
+
 class GameManager:
     def __init__(self):
         pygame.init()
@@ -39,6 +57,7 @@ class GameManager:
         self.initialize_dimensions()
         self.screen = pygame.display.set_mode(
             (GameConfig.SCREEN_DIMENSION.x, GameConfig.SCREEN_DIMENSION.y))
+        set_scroll_speed()
         self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.icon_img = load_image('assets/ico.png')
         self.ground_img = load_image('assets/ground.png')
@@ -142,16 +161,14 @@ class GameManager:
         self.set_level(Levels.SCOREBOARD)
 
     def update_display_mode(self, fullscreen):
-        scroll_speed = GameConfig.FULLSCREEN_SCROLL_SPEED
         new_dimensions = self.initial_dimensions
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         if not fullscreen:
             new_dimensions = GameConfig.DEFAULT_SCREEN_DIMENSIONS
-            scroll_speed = GameConfig.SMALL_SCREEN_SCROLL_SPEED
 
         GameConfig.SCREEN_DIMENSION = new_dimensions
         pygame.display.set_mode(new_dimensions)
-        GameConfig.SCROLL_SPEED = scroll_speed
+        set_scroll_speed()
         self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.main_menu = MainMenu(screen=self.screen, game_manager=self)
         self.pause_menu = PauseMenu(screen=self.screen, game_manager=self)
