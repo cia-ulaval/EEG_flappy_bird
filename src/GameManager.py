@@ -23,6 +23,17 @@ from src.util import load_image
 def get_difficulty_from_value(value):
     return next((diff for diff in Difficulty if diff.value == value), None)
 
+
+def set_scroll_speed():
+    screen_width = GameConfig.SCREEN_DIMENSION.x
+    thresholds = sorted(GameConfig.SCROLL_SPEEDS.keys(), reverse=True)
+    for threshold in thresholds:
+        if screen_width >= threshold:
+            GameConfig.SCROLL_SPEED = GameConfig.SCROLL_SPEEDS[threshold]
+            return
+    GameConfig.SCROLL_SPEED = next(iter(GameConfig.SCROLL_SPEEDS.values()))
+
+
 class GameManager:
     def __init__(self):
         pygame.init()
@@ -39,6 +50,7 @@ class GameManager:
         self.initialize_dimensions()
         self.screen = pygame.display.set_mode(
             (GameConfig.SCREEN_DIMENSION.x, GameConfig.SCREEN_DIMENSION.y))
+        set_scroll_speed()
         self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.icon_img = load_image('assets/ico.png')
         self.ground_img = load_image('assets/ground.png')
@@ -151,7 +163,7 @@ class GameManager:
 
         GameConfig.SCREEN_DIMENSION = new_dimensions
         pygame.display.set_mode(new_dimensions)
-        GameConfig.SCROLL_SPEED = scroll_speed
+        set_scroll_speed()
         self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.main_menu = MainMenu(screen=self.screen, game_manager=self)
         self.pause_menu = PauseMenu(screen=self.screen, game_manager=self)
