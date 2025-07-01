@@ -26,19 +26,12 @@ def get_difficulty_from_value(value):
 
 def set_scroll_speed():
     screen_width = GameConfig.SCREEN_DIMENSION.x
-    thresholds = [
-        (2440, GameConfig.SCROLL_SPEEDS[6]),
-        (2120, GameConfig.SCROLL_SPEEDS[5]),
-        (1920, GameConfig.SCROLL_SPEEDS[4]),
-        (1750, GameConfig.SCROLL_SPEEDS[3]),
-        (1500, GameConfig.SCROLL_SPEEDS[2]),
-        (1000, GameConfig.SCROLL_SPEEDS[1]),
-    ]
-    for threshold, speed in thresholds:
+    thresholds = sorted(GameConfig.SCROLL_SPEEDS.keys(), reverse=True)
+    for threshold in thresholds:
         if screen_width >= threshold:
-            GameConfig.SCROLL_SPEED = speed
+            GameConfig.SCROLL_SPEED = GameConfig.SCROLL_SPEEDS[threshold]
             return
-    GameConfig.SCROLL_SPEED = GameConfig.SCROLL_SPEEDS[0]
+    GameConfig.SCROLL_SPEED = next(iter(GameConfig.SCROLL_SPEEDS.values()))
 
 
 class GameManager:
