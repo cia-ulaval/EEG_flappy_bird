@@ -1,11 +1,11 @@
 import pygame
-from src.util import load_image_rect, rotate_around_center
+from src.util import load_image_rect, rotate_around_center, get_config_value_by_screen_size
 from src.GameConfig import GameConfig
 
 class Bird(pygame.sprite.Sprite):
     def __init__(self, screen: pygame.Surface):
         pygame.sprite.Sprite.__init__(self)
-        self.JUMP_FORCE = 800
+        self.JUMP_FORCE = get_config_value_by_screen_size(GameConfig.JUMP_FORCES)
         self.SPEED_BIRD_TILT = 40
         self.screen = screen
         self.jump_timer = 0

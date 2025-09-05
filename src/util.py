@@ -98,3 +98,11 @@ def get_menu_theme():
     theme.selection_color = (200, 100, 80)
     theme.widget_margin = (0, 20)
     return theme
+
+def get_config_value_by_screen_size(config_dict:dict):
+    screen_width = GameConfig.SCREEN_DIMENSION.x
+    applicable_keys = [key for key in config_dict.keys() if key <= screen_width]
+    if not applicable_keys:
+        return list(config_dict.values())[0]
+    best_key = max(applicable_keys)
+    return config_dict[best_key]
