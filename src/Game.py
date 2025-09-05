@@ -10,13 +10,14 @@ from src.InputManager import InputManager
 from src.GameConfig import GameConfig
 from src.Levels import Levels
 from src.PipeTypes import PipeTypes
-from src.util import load_image_rect, load_image
+from src.util import load_image_rect, load_image, get_config_value_by_screen_size
 
 
 class Game:
     def __init__(self, screen:pygame.Surface, game_manager:GameManager):
-        self.scroll_speed = GameConfig.INITIAL_SCROLL_SPEED
-        self.max_scroll_speed = GameConfig.INITIAL_SCROLL_SPEED
+        self.initialScrollSpeed = get_config_value_by_screen_size(GameConfig.INITIAL_SCROLL_SPEEDS)
+        self.scroll_speed = self.initialScrollSpeed
+        self.max_scroll_speed = self.initialScrollSpeed
         self.paused = False
         self.score = 0
         self.bird = Bird(screen)
@@ -137,7 +138,7 @@ class Game:
     def calculate_difficulty_values(self):
         difficulty = self.game_manager.get_difficulty() - 1
         if difficulty >= 0 and self.score % GameConfig.SCORES_DIFFICULTY_CHECKPOINTS[difficulty] == 0:
-            if self.max_scroll_speed <= GameConfig.INITIAL_SCROLL_SPEED + GameConfig.MAX_SCROLL_SPEED_AUGMENTATIONS[difficulty]:
+            if self.max_scroll_speed <= self.initialScrollSpeed + GameConfig.MAX_SCROLL_SPEED_AUGMENTATIONS[difficulty]:
                 self.max_scroll_speed += GameConfig.SCROLL_SPEED_AUGMENTATIONS[difficulty]
                 print(self.max_scroll_speed)
             else:
