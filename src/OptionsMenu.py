@@ -1,6 +1,7 @@
 import pygame_menu as pm
 import pygame
 import pygame_menu.font
+from pygame import Vector2
 
 from src import GameManager
 from src.Difficulty import Difficulty
@@ -33,9 +34,11 @@ class OptionsMenu:
                             height=GameConfig.SCREEN_DIMENSION[1] - 100,
                             theme=self.theme,
                             title="")
-
+        self.width_input = None
+        self.height_input = None
         self.create_menu()
         self.resize_components()
+        self.menu.onclose = self.apply_window_size_changes
 
     def create_theme(self):
         self.theme = get_menu_theme()
@@ -66,6 +69,14 @@ class OptionsMenu:
                                     font_color=GameConfig.FONT_COLOR,
                                     font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_invincibility,
                                     default=True, background_color=None, border_width=0)
+        self.width_input = self.menu.add.text_input(title="Largeur de fenetre   ", font_size=GameConfig.MENU_FONT_P_SIZE,
+                                    font_color=GameConfig.FONT_COLOR,
+                                    font_name=pygame_menu.font.FONT_8BIT,
+                                    default=self.screen.get_size()[0], background_color=None, border_width=0, maxchar=4)
+        self.height_input = self.menu.add.text_input(title="Hauteur de fenetre   ", font_size=GameConfig.MENU_FONT_P_SIZE,
+                                    font_color=GameConfig.FONT_COLOR,
+                                    font_name=pygame_menu.font.FONT_8BIT,
+                                    default=self.screen.get_size()[1], background_color=None, border_width=0, maxchar=4)
         self.menu.add.range_slider(title="Son", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
                                    font_name=pygame_menu.font.FONT_8BIT, onchange=set_sound_level,
                                    range_values=[0, 100], default=50, background_color=None, border_width=0, increment=1)
@@ -79,6 +90,7 @@ class OptionsMenu:
         self.menu.draw(screen)
 
     def set_level(self, level):
+        self.apply_window_size_changes()
         self.game_manager.set_level(level)
 
     def set_username(self, username):
@@ -95,3 +107,13 @@ class OptionsMenu:
 
     def set_display_mode(self, fullscreen):
         self.game_manager.update_display_mode(fullscreen)
+
+    def apply_window_size_changes(self):
+        is_fullscreen = GameConfig.SCREEN_DIMENSION != GameConfig.DEFAULT_SCREEN_DIMENSIONS
+        try:
+            width = float(self.width_input.get_value())
+            height = float(self.height_input.get_value())
+            if not (width == GameConfig.SCREEN_DIMENSION.x and height == GameConfig.SCREEN_DIMENSION.y):
+                self.game_manager.update_display_mode(is_fullscreen, Vector2(width, height))
+        except ValueError:
+            pass

@@ -153,13 +153,18 @@ class GameManager:
         self.scoreboard = Scoreboard(game_manager=self)
         self.set_level(Levels.SCOREBOARD)
 
-    def update_display_mode(self, fullscreen):
-        new_dimensions = self.initial_dimensions
-        os.environ['SDL_VIDEO_CENTERED'] = '1'
-        if not fullscreen:
-            new_dimensions = GameConfig.DEFAULT_SCREEN_DIMENSIONS
-
-        GameConfig.SCREEN_DIMENSION = new_dimensions
+    def update_display_mode(self, fullscreen, dimensions=None):
+        if dimensions is None:
+            new_dimensions = self.initial_dimensions
+            os.environ['SDL_VIDEO_CENTERED'] = '1'
+            if not fullscreen:
+                new_dimensions = GameConfig.DEFAULT_SCREEN_DIMENSIONS
+            GameConfig.SCREEN_DIMENSION = new_dimensions
+        else:
+            new_dimensions = dimensions
+            os.environ['SDL_VIDEO_CENTERED'] = '1'
+            GameConfig.SCREEN_DIMENSION = new_dimensions
+            GameConfig.DEFAULT_SCREEN_DIMENSIONS = new_dimensions
         pygame.display.set_mode(new_dimensions)
         set_scroll_speed()
         self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
