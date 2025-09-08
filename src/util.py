@@ -94,9 +94,9 @@ def get_menu_theme():
     theme.widget_font = pygame_menu.font.FONT_8BIT
     theme.widget_font_color = (255, 255, 255)
     theme.widget_font_size = 30
-
-    theme.selection_color = (200, 100, 80)
     theme.widget_margin = (0, 20)
+    theme.selection_color = (200, 100, 80)
+
     return theme
 
 def get_config_value_by_screen_size(config_dict:dict):
