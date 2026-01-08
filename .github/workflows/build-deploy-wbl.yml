@@ -1,4 +1,4 @@
-name: Build and Deploy Game
+name: Build and Deploy WBL WebApp
 
 on:
   push:
