@@ -72,3 +72,8 @@ jobs:
         git push origin flapeeg-game-build-${{ github.run_number }}
 
         gh pr create --base master --head "flapeeg-game-build-${{ github.run_number }}" --title "Update flapeeg web build" --body "This pull request updates the flapeeg web build from EEG_flappy_bird."
+
+    - name: Run Semantic Release
+      run: npx semantic-release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
