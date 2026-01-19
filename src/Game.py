@@ -1,20 +1,20 @@
-import pygame
 import random
 from collections import deque
 
-from src import GameManager
+import pygame
+
 from src.Bird import Bird
 from src.Difficulty import Difficulty
-from src.Pipe import Pipe
-from src.InputManager import InputManager
 from src.GameConfig import GameConfig
+from src.InputManager import InputManager
 from src.Levels import Levels
+from src.Pipe import Pipe
 from src.PipeTypes import PipeTypes
 from src.util import load_image_rect, load_image, get_config_value_by_screen_size
 
 
 class Game:
-    def __init__(self, screen:pygame.Surface, game_manager:GameManager):
+    def __init__(self, screen, game_manager):
         self.initialScrollSpeed = get_config_value_by_screen_size(GameConfig.INITIAL_SCROLL_SPEEDS)
         self.scroll_speed = self.initialScrollSpeed
         self.max_scroll_speed = self.initialScrollSpeed
@@ -24,7 +24,7 @@ class Game:
         self.scroll = 0
         self.screen = screen
         self.pipe_timer = 0
-        self.difficulty_coefficient = 0
+        self.difficulty_coefficient = game_manager.get_difficulty() / 2
         self.pipes = pygame.sprite.Group()
         self.pipes_pool = deque()
         self.add_pipes()
@@ -37,10 +37,9 @@ class Game:
         self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
         self.bg_img, _ = load_image_rect('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
         self.ground_img, _ = load_image_rect('assets/ground.png')
-        self.group = pygame.sprite.RenderPlain((self.bird))
+        self.group = pygame.sprite.RenderPlain(self.bird)
         self.game_manager = game_manager
         self.score_font = pygame.font.SysFont('Segoe', 26)
-
 
     def add_pipes(self):
         for _ in range(GameConfig.PIPES_BUFFER):
@@ -78,6 +77,8 @@ class Game:
             difficulty = self.game_manager.get_difficulty()
             if difficulty is Difficulty.FACILE.value:
                 self.bird.reset_first_jump()
+        if InputManager.is_jump_down() and self.bird.first_jump:
+            self.game_manager.play_music()
         if InputManager.is_jump_down():
             self.bird.jump()
         if (not self.invincible) and (pygame.sprite.spritecollideany(self.bird, self.pipes) or self.bird.crashed()):
@@ -112,14 +113,15 @@ class Game:
         pipes_top = self.pipes_pool.pop()
         pipes_bottom = self.pipes_pool.pop()
 
-        abs_min_gap = int(150 / ((1 + self.difficulty_coefficient) * 2))
-        min_gap = max(int(0.20 * self.screen_height / (1 + self.difficulty_coefficient)), abs_min_gap)
-        max_gap = max(int(0.35 * self.screen_height / (1 + self.difficulty_coefficient)), abs_min_gap + 30)
+        abs_min_gap = int(150 / ((1 + self.difficulty_coefficient) * 2.5))
+        min_gap = max(int((0.35 * self.screen_height) / (1 + self.difficulty_coefficient / 2)), abs_min_gap + 20)
+        max_gap = max(int((0.45 * self.screen_height) / (1 + self.difficulty_coefficient / 2)), abs_min_gap + 30)
 
         abs_min_visible_height = 700
         pipe_visible_height = max(int(0.73 * self.screen_height), abs_min_visible_height)
         y_top_min = int((0.25 * (1 + (self.difficulty_coefficient / 500))) * self.screen_height) - pipe_visible_height
-        y_top_max = int((0.6 / (1 + (self.difficulty_coefficient / 500))) * self.screen_height) - min_gap - pipe_visible_height
+        y_top_max = int(
+            (0.6 / (1 + (self.difficulty_coefficient / 500))) * self.screen_height) - min_gap - pipe_visible_height
 
         gap_height = random.randint(min_gap, max_gap)
         y_top = random.randint(y_top_min, y_top_max)
@@ -147,7 +149,6 @@ class Game:
                 self.difficulty_coefficient += GameConfig.DIFFICULTY_COEFFICIENTS[difficulty]
             else:
                 print("Maximum difficulty has been reached")
-
 
     def game_over(self):
         self.scroll_speed = 0

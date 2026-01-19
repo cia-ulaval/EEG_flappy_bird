@@ -1,23 +1,24 @@
-import random
 import asyncio
 import os
+import os.path
+import random
 
 import pygame
 import pygame.gfxdraw
+from pygame import Vector2
 
 from src import Difficulty
+from src.Difficulty import Difficulty
 from src.DisplayModes import DisplayModes
-from src.Levels import Levels
-from pygame import Vector2
-from src.GameConfig import GameConfig
 from src.Game import Game
+from src.GameConfig import GameConfig
+from src.InputManager import InputManager
+from src.Levels import Levels
 from src.MainMenu import MainMenu
 from src.OptionsMenu import OptionsMenu
 from src.PauseMenu import PauseMenu
 from src.Scoreboard import Scoreboard
-from src.InputManager import InputManager
-from src.Difficulty import Difficulty
-from src.util import load_image
+from src.util import load_image, resource_path
 
 
 def get_difficulty_from_value(value):
@@ -34,8 +35,32 @@ def set_scroll_speed():
     GameConfig.INITIAL_SCROLL_SPEED = next(iter(GameConfig.INITIAL_SCROLL_SPEEDS.values()))
 
 
+def stop_music():
+    try:
+        if pygame.mixer.get_init():
+            pygame.mixer.music.stop()
+    except Exception as e:
+        print(f"Could not stop music: {e}")
+
+def pause_music():
+    try:
+        if pygame.mixer.get_init():
+            pygame.mixer.music.pause()
+    except Exception as e:
+        print(f"Could not pause music: {e}")
+
+
+def continue_music():
+    try:
+        if pygame.mixer.get_init():
+            pygame.mixer.music.unpause()
+    except Exception as e:
+        print(f"Could not continue music: {e}")
+
+
 class GameManager:
     def __init__(self):
+        self._music_file = None
         pygame.init()
         self.difficulty = Difficulty.FACILE.value
         self.current_level = GameConfig.DEFAULT_LEVEL
@@ -69,6 +94,18 @@ class GameManager:
     def setup_pygame(self):
         pygame.display.set_icon(self.icon_img)
         pygame.display.set_caption(GameConfig.WINDOW_NAME)
+        self.init_sound()
+
+    def init_sound(self):
+        try:
+            if not pygame.mixer.get_init():
+                pygame.mixer.init()
+            music_rel = os.path.join(GameConfig.RESSOURCES_DIR, GameConfig.SOUNDS_DIR, GameConfig.GAME_MUSIC)
+            self._music_file = resource_path(music_rel)
+            pygame.mixer.music.load(self._music_file)
+        except Exception as e:
+            self._music_file = None
+            print(f"Audio init failed: {e}")
 
     async def start_application(self):
         print('Application Flappy_EEG starting...')
@@ -86,15 +123,18 @@ class GameManager:
             self.screen.blit(self.bg_img, (0, 0))
             match self.current_level:
                 case Levels.GAME:
+                    continue_music()
                     self.game.update(self.dt)
                     self.game.draw(self.screen)
                     pygame.display.flip()
                 case Levels.MENU:
+                    stop_music()
                     self.game.update_bg()
                     self.game.draw_ground(self.screen)
                     self.main_menu.menu.update(events)
                     self.main_menu.draw(self.screen)
                 case Levels.PAUSE_MENU:
+                    pause_music()
                     self.game.update(self.dt)
                     self.game.draw(self.screen)
                     self.pause_menu.menu.update(events)
@@ -102,6 +142,7 @@ class GameManager:
                     self.pause_menu.draw(self.screen)
                     pygame.display.flip()
                 case Levels.SCOREBOARD:
+                    stop_music()
                     self.game.update_bg()
                     self.game.draw_ground(self.screen)
                     self.scoreboard.menu.update(events)
@@ -115,9 +156,10 @@ class GameManager:
             pygame.display.flip()
             self.dt = self.clock.tick(GameConfig.REFRESH_RATE) / 1000
             await asyncio.sleep(0)
+        stop_music()
         pygame.quit()
 
-    def set_level(self, level:Levels, in_game:bool = False):
+    def set_level(self, level: Levels, in_game: bool = False):
         if level == Levels.GAME and not in_game:
             self.game.__init__(game_manager=self, screen=self.screen)
         elif level == Levels.GAME:
@@ -173,3 +215,10 @@ class GameManager:
         self.options_menu = OptionsMenu(screen=self.screen, game_manager=self)
         self.scoreboard = Scoreboard(game_manager=self)
         self.game = Game(game_manager=self, screen=self.screen)
+
+    def play_music(self):
+        try:
+            if self._music_file and pygame.mixer.get_init():
+                pygame.mixer.music.play(loops=-1, start=29.0, fade_ms=1000)
+        except Exception as e:
+            print(f"Could not start music: {e}")

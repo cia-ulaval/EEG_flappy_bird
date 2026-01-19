@@ -1,19 +1,19 @@
+import json
 import math
 
-import pygame_menu as pm
-import json
 import pygame
+import pygame_menu as pm
 import pygame_menu.font
 from pygame import Vector2
 
-from src.InputManager import InputManager
-from src.util import load_image_rect, get_menu_theme, load_image, resource_path
 from src.GameConfig import GameConfig
-from src import GameManager
+from src.InputManager import InputManager
 from src.Levels import Levels
+from src.util import load_image_rect, get_menu_theme, load_image, resource_path, join_resource_path
+
 
 class Scoreboard:
-    def __init__(self, game_manager: GameManager):
+    def __init__(self, game_manager):
         self.game_manager = game_manager
         self.file = open("data/scores.json")
         self.data = json.load(self.file)
@@ -42,11 +42,13 @@ class Scoreboard:
     def resize_components(self):
         self.bg_img, _ = load_image_rect('assets/bg.png', resize=GameConfig.SCREEN_DIMENSION)
         self.leaderboard, _ = load_image_rect('assets/bgScoreboard.png',
-                                              resize=Vector2(GameConfig.SCREEN_DIMENSION[0] - 200, GameConfig.SCREEN_DIMENSION[1] - 50))
+                                              resize=Vector2(GameConfig.SCREEN_DIMENSION[0] - 200,
+                                                             GameConfig.SCREEN_DIMENSION[1] - 50))
 
     def create_menu(self):
         self.menu.set_relative_position(50, 55)
-        self.menu.add.label(title="Pointages\n\n", font_size=GameConfig.MENU_FONT_TILE_SIZE, font_color=GameConfig.FONT_COLOR_SECONDARY,
+        self.menu.add.label(title="Pointages\n\n", font_size=GameConfig.MENU_FONT_TILE_SIZE,
+                            font_color=GameConfig.FONT_COLOR_SECONDARY,
                             font_name=pygame_menu.font.FONT_8BIT)
 
     def add_games_to_leaderboard(self):
@@ -60,7 +62,7 @@ class Scoreboard:
             self.menu.add.label(
                 title=f"{position:<{indent_index}} {name:^{indent_names}} {score:>4}",
                 font_color=[self.GOLD, self.SILVER, self.BRONZE, GameConfig.FONT_COLOR][min(index, 3)],
-                font_name=GameConfig.FONT,
+                font_name=join_resource_path(GameConfig.FONT),
                 font_size=GameConfig.MENU_FONT_P_SIZE,
                 margin=(0, 15)
             )
@@ -74,8 +76,8 @@ class Scoreboard:
 
     def add_return_button(self):
         self.menu.add.button(title="Retour", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
-                                    font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.MENU),
-                                    background_color=None, border_width=0)
+                             font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.MENU),
+                             background_color=None, border_width=0)
 
     def draw(self, screen):
         overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)

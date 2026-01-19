@@ -1,9 +1,11 @@
 import pygame
-from src.util import load_image_rect, rotate_around_center, get_config_value_by_screen_size
+
 from src.GameConfig import GameConfig
+from src.util import load_image_rect, rotate_around_center, get_config_value_by_screen_size
+
 
 class Bird(pygame.sprite.Sprite):
-    def __init__(self, screen: pygame.Surface):
+    def __init__(self, screen):
         pygame.sprite.Sprite.__init__(self)
         self.JUMP_FORCE = get_config_value_by_screen_size(GameConfig.JUMP_FORCES)
         self.SPEED_BIRD_TILT = 40
@@ -14,7 +16,7 @@ class Bird(pygame.sprite.Sprite):
         self.bird_flap_image, self.bird_flap_rect = load_image_rect("assets/brainFlap.png", -1)
         self.bird_mid_flap_image, self.bird_mid_flap_rect = load_image_rect("assets/brainMidFlap.png", -1)
         self.bird.center = (int(screen.get_width() / 2),
-                                  int(screen.get_height() / 2))
+                            int(screen.get_height() / 2))
         self.first_jump = True
         self.image = self.bird_image
         self.rect = self.bird

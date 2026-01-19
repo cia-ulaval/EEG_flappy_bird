@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Levels(Enum):
     MENU = 1
     PAUSE_MENU = 2
