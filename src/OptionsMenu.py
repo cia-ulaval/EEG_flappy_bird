@@ -1,13 +1,12 @@
-import pygame_menu as pm
 import pygame
+import pygame_menu as pm
 import pygame_menu.font
 from pygame import Vector2
 
-from src import GameManager
 from src.Difficulty import Difficulty
-from src.util import load_image_rect, get_menu_theme, load_image
 from src.GameConfig import GameConfig
 from src.Levels import Levels
+from src.util import load_image_rect, get_menu_theme, load_image
 
 
 def set_sound_level(sound_level):
@@ -24,8 +23,9 @@ def format_difficulties():
 
 
 class OptionsMenu:
-    def __init__(self, screen:pygame.Surface, game_manager: GameManager):
+    def __init__(self, screen, game_manager):
         self.screen = screen
+        set_sound_level(25)
         self.game_manager = game_manager
         self.theme = pm.themes.THEME_SOLARIZED.copy()
         self.bg_img = pygame.transform.scale(load_image('assets/bg.png'), GameConfig.SCREEN_DIMENSION)
@@ -48,11 +48,14 @@ class OptionsMenu:
 
     def create_menu(self):
         self.menu.set_relative_position(50, 55)
-        self.menu.add.label(title="Options\n", font_size=GameConfig.MENU_FONT_TILE_SIZE, font_color=GameConfig.FONT_COLOR,
+        self.menu.add.label(title="Options\n", font_size=GameConfig.MENU_FONT_TILE_SIZE,
+                            font_color=GameConfig.FONT_COLOR,
                             font_name=pygame_menu.font.FONT_8BIT)
-        self.menu.add.text_input(title="Nom   ", textinput_id="user_input", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
-                                font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_username,
-                                background_color=None, border_width=0, maxchar=10, default=self.game_manager.get_username())
+        self.menu.add.text_input(title="Nom   ", textinput_id="user_input", font_size=GameConfig.MENU_FONT_P_SIZE,
+                                 font_color=GameConfig.FONT_COLOR,
+                                 font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_username,
+                                 background_color=None, border_width=0, maxchar=10,
+                                 default=self.game_manager.get_username())
         self.menu.add.dropselect(title="Difficulte", font_size=GameConfig.MENU_FONT_P_SIZE,
                                  font_color=GameConfig.FONT_COLOR, items=format_difficulties(),
                                  font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_difficulty,
@@ -60,28 +63,35 @@ class OptionsMenu:
         self.menu.add.toggle_switch(title="Plein Ecran", font_size=GameConfig.MENU_FONT_P_SIZE,
                                     font_color=GameConfig.FONT_COLOR,
                                     font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_display_mode,
-                                    default=GameConfig.SCREEN_DIMENSION != GameConfig.DEFAULT_SCREEN_DIMENSIONS, background_color=None, border_width=0)
+                                    default=GameConfig.SCREEN_DIMENSION != GameConfig.DEFAULT_SCREEN_DIMENSIONS,
+                                    background_color=None, border_width=0)
         self.menu.add.toggle_switch(title="Tuyaux", font_size=GameConfig.MENU_FONT_P_SIZE,
-                                 font_color=GameConfig.FONT_COLOR,
-                                 font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_pipes_active,
-                                 default=True, background_color=None, border_width=0)
+                                    font_color=GameConfig.FONT_COLOR,
+                                    font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_pipes_active,
+                                    default=True, background_color=None, border_width=0)
         self.menu.add.toggle_switch(title="Invincibilite", font_size=GameConfig.MENU_FONT_P_SIZE,
                                     font_color=GameConfig.FONT_COLOR,
                                     font_name=pygame_menu.font.FONT_8BIT, onchange=self.set_invincibility,
                                     default=True, background_color=None, border_width=0)
-        self.width_input = self.menu.add.text_input(title="Largeur de fenetre   ", font_size=GameConfig.MENU_FONT_P_SIZE,
-                                    font_color=GameConfig.FONT_COLOR,
-                                    font_name=pygame_menu.font.FONT_8BIT,
-                                    default=self.screen.get_size()[0], background_color=None, border_width=0, maxchar=4)
-        self.height_input = self.menu.add.text_input(title="Hauteur de fenetre   ", font_size=GameConfig.MENU_FONT_P_SIZE,
-                                    font_color=GameConfig.FONT_COLOR,
-                                    font_name=pygame_menu.font.FONT_8BIT,
-                                    default=self.screen.get_size()[1], background_color=None, border_width=0, maxchar=4)
+        self.width_input = self.menu.add.text_input(title="Largeur de fenetre   ",
+                                                    font_size=GameConfig.MENU_FONT_P_SIZE,
+                                                    font_color=GameConfig.FONT_COLOR,
+                                                    font_name=pygame_menu.font.FONT_8BIT,
+                                                    default=self.screen.get_size()[0], background_color=None,
+                                                    border_width=0, maxchar=4)
+        self.height_input = self.menu.add.text_input(title="Hauteur de fenetre   ",
+                                                     font_size=GameConfig.MENU_FONT_P_SIZE,
+                                                     font_color=GameConfig.FONT_COLOR,
+                                                     font_name=pygame_menu.font.FONT_8BIT,
+                                                     default=self.screen.get_size()[1], background_color=None,
+                                                     border_width=0, maxchar=4)
         self.menu.add.range_slider(title="Son", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
                                    font_name=pygame_menu.font.FONT_8BIT, onchange=set_sound_level,
-                                   range_values=[0, 100], default=50, background_color=None, border_width=0, increment=1)
+                                   range_values=[0, 100], default=25, background_color=None, border_width=0,
+                                   increment=1)
         self.menu.add.button(title="Retour", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
-                             font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.MENU), background_color=None, border_width=0)
+                             font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.MENU),
+                             background_color=None, border_width=0)
 
     def draw(self, screen):
         overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)

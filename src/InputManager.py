@@ -1,11 +1,12 @@
 import pygame
 
+
 class InputManager:
     jump_down = False
     echap_pressed = False
 
     @staticmethod
-    def handle_event(event:pygame.event.Event):
+    def handle_event(event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LSHIFT:
                 InputManager.jump_down = True

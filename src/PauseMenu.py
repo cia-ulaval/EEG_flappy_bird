@@ -1,15 +1,15 @@
-import pygame_menu as pm
 import pygame
+import pygame_menu as pm
 import pygame_menu.font
 
-from src import GameManager
-from src.InputManager import InputManager
-from src.util import load_image_rect, get_menu_theme, load_image
 from src.GameConfig import GameConfig
+from src.InputManager import InputManager
 from src.Levels import Levels
+from src.util import load_image_rect, get_menu_theme, load_image
+
 
 class PauseMenu:
-    def __init__(self, screen:pygame.Surface, game_manager: GameManager):
+    def __init__(self, screen, game_manager):
         self.game_manager = game_manager
 
         self.screen = screen
@@ -32,12 +32,14 @@ class PauseMenu:
 
     def create_menu(self):
         self.menu.set_relative_position(50, 55)
-        self.menu.add.label(title="Pause\n\n", font_size=GameConfig.MENU_FONT_TILE_SIZE, font_color=GameConfig.FONT_COLOR,
+        self.menu.add.label(title="Pause\n\n", font_size=GameConfig.MENU_FONT_TILE_SIZE,
+                            font_color=GameConfig.FONT_COLOR,
                             font_name=pygame_menu.font.FONT_8BIT)
         self.menu.add.button(title="Reprendre", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
                              font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.GAME, True),
                              background_color=None, border_width=0)
-        self.menu.add.button(title="Retour au menu", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
+        self.menu.add.button(title="Retour au menu", font_size=GameConfig.MENU_FONT_P_SIZE,
+                             font_color=GameConfig.FONT_COLOR,
                              font_name=pygame_menu.font.FONT_8BIT, action=lambda: self.set_level(Levels.MENU),
                              background_color=None, border_width=0)
         self.menu.add.button(title="Quitter", font_size=GameConfig.MENU_FONT_P_SIZE, font_color=GameConfig.FONT_COLOR,
